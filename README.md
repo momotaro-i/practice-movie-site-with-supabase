@@ -1,92 +1,228 @@
-# practice-movie-site-with-spabase
+# Next.js × mantine × styled component テンプレート
 
+## 目次
 
+- [目次](#目次)
+- [主な使用技術](#主な使用技術)
+- [開発環境構築](#開発環境構築)
+- [環境変数](#環境変数)
+- [コマンド一覧](#コマンド一覧)
+- [ディレクトリ構成](#ディレクトリ構成)
+- [案件別の初期設定](#案件別の初期設定)
+- [使用サンプルについて](#使用サンプルについて)
+- [styled-components の Mixin 使用方法](#styled-components-の-mixin-使用方法)
+- [その他](#その他)
 
-## Getting started
+## 主な使用技術
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### 🖥️ フロントエンドフレームワーク
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- ![Next.js](https://img.shields.io/badge/Next.js-15.3.3-000000?logo=next.js)
+- ![React](https://img.shields.io/badge/React-19.x-61DAFB?logo=react)
+- ![React DOM](https://img.shields.io/badge/React--DOM-19.x-61DAFB?logo=react)
 
-## Add your files
+ページルーター（Page Router）を使用
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### 🎨 スタイリング
+
+- ![Mantine](https://img.shields.io/badge/Mantine-8.x-06B6D4?logo=mantine)  
+  使用パッケージ：
+
+  - `@mantine/core`
+  - `@mantine/hooks`
+  - `@mantine/form`
+
+- ![Sass](https://img.shields.io/badge/Sass-1.89.1-CC6699?logo=sass)
+- ![styled-components](https://img.shields.io/badge/styled--components-6.1.18-DB7093?logo=styled-components)
+
+### 🧰 状態管理
+
+- ![Zustand](https://img.shields.io/badge/Zustand-5.x-000000?logo=react)  
+  https://zustand.docs.pmnd.rs/getting-started/introduction
+
+### 📦 その他ライブラリ
+
+- `dayjs`(日付処理)
+
+## 開発環境構築
+
+```bash
+git clone http://gitlab.dande-lion.net/yuzawaren/nextjs_template.git
+cd your-repo
+yarn install
+yarn run dev
+```
+
+## 環境変数
+
+プロジェクトの環境変数は `.env.development` `.env.test` `.env.staging` `.env.prod` の 4 種類があります。  
+適切な環境変数ファイルを使用して、以下のように設定してください。
+
+### **🛠 環境別の.env**
+
+| ファイル           | 用途                 | 使用されるスクリプト  |
+| ------------------ | -------------------- | --------------------- |
+| `.env.development` | **ローカル開発環境** | `yarn run dev`        |
+| `.env.test`        | **テスト環境**       | `yarn run build:test` |
+| `.env.staging`     | **ステージング環境** | `yarn run build:stg`  |
+| `.env.prod`        | **本番環境**         | `yarn run build:prod` |
+
+## コマンド一覧
+
+このプロジェクトで使用する主要なコマンド一覧です。
+
+| コマンド              | 説明                                       |
+| --------------------- | ------------------------------------------ |
+| `yarn run dev`        | **開発環境** を起動（ホットリロードあり）  |
+| `yarn run build:test` | **テスト環境用** にビルド                  |
+| `yarn run build:stg`  | **ステージング環境用** にビルド            |
+| `yarn run build:prod` | **本番環境用** にビルド & ssi-replace 実行 |
+| `yarn run deploy`     | デプロイスクリプト実行                     |
+| `yarn run lint`       | コードの静的解析（ESLint）                 |
+
+## ディレクトリ構成
+
+このプロジェクトでは、**機能単位・役割単位のディレクトリ構成**を採用しています。
+
+機能ごとの画面実装やロジックは `/features/` 以下にまとまっており、  
+それぞれの機能単位で `components/`, `hooks/`, `types/`, `views/`,`store/` を持つ構成です。
+
+また、API 通信やデータ取得関連は `/api/` に、共通ユーティリティは `/utils/` に配置されています。
 
 ```
-cd existing_repo
-git remote add origin http://gitlab.dande-lion.net/idetamomoka/practice-movie-site-with-spabase.git
-git branch -M main
-git push -uf origin main
+src/
+├── components/                     # 再利用可能なUIコンポーネント（共通部品）
+│   ├── headers/                    # ヘッダー関連
+│   ├── layout/                     # レイアウト関連（画面構造など）
+│   ├── loader/                     # ローディングUI
+│   └── providers/                  # コンテキストプロバイダやDIの設定
+│
+├── configs/                        # アプリケーション設定（定数など）
+│
+├── features/                       # 機能（ドメイン）ごとのロジック集約
+│   ├── auth/                       # 認証機能（サインイン/サインアップ/パスワードリセットなど）
+│   │   ├── components/             # 認証専用のUI部品
+│   │   │   ├── AuthPageLayout.tsx     # 認証ページ用のレイアウト
+│   │   │   └── SignInForm.tsx         # サインインフォーム
+│   │   ├── store/                  # 状態管理ロジック
+│   │   │   └── index.ts
+│   │   ├── types/                  # 型定義
+│   │   └── views/                  # 各画面のコンテナ（表示用ロジック）
+│   │       ├── PasswordReset.tsx      # パスワードリセット画面
+│   │       ├── SigninView.tsx         # サインイン画面
+│   │       └── SignUpView.tsx         # サインアップ画面
+│   │
+│   └── counter/                    # カウンター機能
+│
+├── hooks/                          # カスタムReactフック（useXxx）
+│
+├── pages/                          # Next.js のページルーティング
+│   ├── password/
+│   │   └── reset/
+│   │       └── index.tsx           # `/password/reset` ページ
+│   │
+│   ├── signin/                     # `/signin` ページ
+│   ├── signUp/                     # `/signUp` ページ
+│   ├── _app.tsx                    # 全体の初期化処理（共通レイアウトやプロバイダ）
+│   ├── _document.tsx              # HTMLカスタマイズ
+│   └── index.tsx                  # トップページ（`/`）
+│
+├── stores/                         # グローバルストア（状態管理、共通データ）
+│
+└── utils/                          # ユーティリティ関数群（汎用ロジック）
+
 ```
 
-## Integrate with your tools
+## 案件別の初期設定
 
-- [ ] [Set up project integrations](http://gitlab.dande-lion.net/idetamomoka/practice-movie-site-with-spabase/-/settings/integrations)
+- **env の作成**
+  `.env.sample`を例に [環境変数](#環境変数) の環境変数を作成してください。
 
-## Collaborate with your team
+- **meta 設定の追加**
+  env ファイルにサイトの URL`NEXT_PUBLIC_SITE_URL` を追加し、
+  `src\configs\index.ts`の`META_TITLE_BASE` にサイトのタイトルを入力してください。
+  全体の meta 設定は`app.tsx`。 ページごとの設定は`src\components\MetaHead.tsx`が使えます。  
+  参考：`src\pages\signin\index.tsx`
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- **font の指定**
+- `src\configs\fonts.ts`でフォントを読み込み
+  `src\pages\_app.tsx` でフォントを指定。  
+  参考：https://nextjs.org/docs/app/getting-started/fonts
+- **style.css の設定**  
+  styled component では css 変数を使用してください。css 変数は`src\styles\globals.scss`で定義します。
 
-## Test and Deploy
+- **mantine theme の設定**  
+  必要に応じて Mantine のテーマの設定をしてください。 `src\styles\mantine\mantineTheme.ts`  
+  参考: https://mantine.dev/theming/mantine-provider/ ,
+  https://mantine.dev/theming/theme-object/
 
-Use the built-in continuous integration in GitLab.
+- GTM の設定
+  `src\configs\index.ts` の`export const GTM_ID = 'GTM-XXXXX';`に GTM ID をいれる。  
+  GTM を入れない場合は
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+  - `src\pages\_document.tsx` の `<noscript>`の記述を削除
+  - `src\types\global.d.ts`の dataLayer の型の削除
+  - `src/pages/_app.tsx` の`useGTM()`と GTM の`<Script>`を削除
 
-***
+- **deploy.sh の設定**  
+  デプロイ作業を自動化するためのシェルスクリプトです。`/deploy.sh`  
+  **`.gitignore` に deploy.sh を追加してください。**  
+  その後 ssh 名とアップロード先のディレクトリを指定してください。
 
-# Editing this README
+  設定例
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+  ```
+   # ディレクトリが存在しない場合は作成 dan__website === ssh 名
+  ssh dan__website 'mkdir -p /home/dandetest/dande-lion.website/public_html/XXX/'
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+  # ビルドされたファイルをサーバーにアップロード
+  scp -r dist/* dan__website:/home/dandetest/dande-lion.website/public_html/XXX/'
+  ```
 
-## Name
-Choose a self-explaining name for your project.
+## 使用サンプルについて
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- fetch
+  `src\features\users\components\UserList.tsx`
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- Zustand
+  セッションストレージを使った例：
+  `src\features\auth\store\index.ts`  
+  `src\components\headers\GlobalHeader.tsx`
+  通常の例：  
+  `src\features\counter\store\index.ts`, `src\features\counter\components\Counter.tsx`
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## styled-components の Mixin 使用方法
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+このプロジェクトでは、共通スタイル処理を `mixins` として管理しています。  
+`styled-components` でテンプレートリテラルとして呼び出して使用します。`src\styles\styled-component\mixin.ts`
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```tsx
+import styled from 'styled-components';
+import { mixins } from '@/styles/mixins';
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+const Title = styled.h1`
+  ${mixins.lineClamp(2)};
+  ${mixins.fontFamilyWeight('roboto', 500)};
+`;
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## その他
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+jotai 不採用理由
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Jotai の `atomWithStorage` を用いた場合、SSR 環境（Next.js Page Router）での初期レンダリング時に localStorage(sessionStorage) へアクセスできず、一瞬デフォルト値で描画される問題がありました。
+これを解決するためには `getOnInit` オプションや `ClientOnly` コンポーネントなどの追加実装が必要になるためやや複雑で制約もあります。
+[参考](https://jotai.org/docs/utilities/storage#server-side-rendering)
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Zustand でも同様の問題はありますが、`persist` 機能と `useEffect` によるクライアント制御で比較的簡単に回避できます。また、Zustand は現在コミュニティの使用率が高く、設定例や知見も豊富であるため、開発・運用の観点からも安定性が高いと判断しました。
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+なお、細かい状態依存や派生ロジックが多いアプリケーションでは Jotai の方が得意です。
 
-## License
-For open source projects, say how it is licensed.
+※補足：開発中の `next dev` は SSR と同様の挙動（リクエストごとにページを再生成）になるため、ストレージ初期値が取得できず描画に差異が出る問題がローカルで顕在化します。
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+セッションストレージを使った例：
+`src\features\auth\store\index.ts`  
+`src\components\headers\GlobalHeader.tsx`
+
+通常の例：  
+`src\features\counter\store\index.ts`, `src\features\counter\components\Counter.tsx`

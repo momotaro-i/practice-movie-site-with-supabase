@@ -1,0 +1,32 @@
+{
+  "Media Query Template": {
+    "prefix": "res",
+    "body": [
+      "@media ${media.pc} {",
+      "  $0",
+      "}",
+      "@media ${media.sp} {",
+      "  ",
+      "}"
+    ],
+    "description": "PCとSP用のメディアクエリテンプレート"
+  },
+  "Media Query Template (SP)": {
+    "prefix": "sp",
+    "body": [
+      "@media ${media.sp} {",
+      "  $0",
+      "}"
+    ],
+    "description": "SP用のメディアクエリテンプレート"
+  },
+  "Media Query Template (PC)": {
+    "prefix": "pc",
+    "body": [
+      "@media ${media.pc} {",
+      "  $0",
+      "}"
+    ],
+    "description": "PC用のメディアクエリテンプレート"
+  },
+}

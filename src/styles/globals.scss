@@ -1,0 +1,27 @@
+@use './reset' as *;
+@use './mixin' as *;
+@use './variables' as *;
+@use './utility/index' as *;
+
+:root {
+  --font-roboto: 'Roboto', sans-serif;
+  --font-noto-sans-jp: 'Noto Sans JP', sans-serif;
+  --breakPoint: #{$breakPoint};
+  --spWd: #{$spWd}; // spのデザインデータ幅
+  --black: #333;
+  --white: #fff;
+  --light-blue: #8ad2ff;
+  --primary: #ffa500;
+  --secondary: #ffedcc;
+}
+
+html {
+  font-family: var(--font-roboto), var(--font-noto-sans-jp), sans-serif;
+  font-weight: 500;
+  letter-spacing: 0em;
+  line-height: 1;
+  color: var(--black);
+  @include sp {
+    font-size: calc(10 / $spWd * 100vw);
+  }
+}

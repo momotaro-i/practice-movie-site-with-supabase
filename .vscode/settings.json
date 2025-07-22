@@ -8,4 +8,9 @@
   "eslint.useFlatConfig": true,
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
   "cSpell.words": ["noto", "partialize"]
+  "cSpell.ignorePaths": [
+    "**/.env",
+    "**/.env.*",
+    ".next/**"
+  ]
 }

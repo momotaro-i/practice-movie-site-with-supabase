@@ -44,8 +44,9 @@ export const mantineBaseTheme = createTheme({
       },
       styles: () => ({
         root: {
+          textDecoration: 'none',
           color: '#1f5c99',
-          transition: 'color 0.2s ease',
+          transition: 'all 0.2s ease-in',
         },
       }),
     },

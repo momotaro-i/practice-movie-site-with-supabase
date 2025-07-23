@@ -25,3 +25,11 @@ html {
     font-size: calc(10 / $spWd * 100vw);
   }
 }
+
+a {
+  &.hover-opacity {
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

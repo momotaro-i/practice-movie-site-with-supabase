@@ -11,7 +11,12 @@ type CustomButtonProps = ButtonProps &
 export const DefaultButton = (props: CustomButtonProps) => {
   return (
     <MantineProvider theme={mantineButtonTheme}>
-      <Button {...props} />
+      <Button
+        style={{
+          transition: 'all 0.2s ease-in-out',
+        }}
+        {...props}
+      />
     </MantineProvider>
   );
 };

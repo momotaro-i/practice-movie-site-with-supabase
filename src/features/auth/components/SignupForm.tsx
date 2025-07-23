@@ -1,94 +1,47 @@
-import { useForm } from '@mantine/form';
-import { useState } from 'react';
+'use client';
 
+import { DefaultButton } from '@/components/buttons/DefaultButton';
 import { Links } from '@/configs/links';
-import { TSignupFormValues, TSignupRequestValues } from '@/features/auth/types';
-import { sleep } from '@/utils';
-import { useRouter } from 'next/navigation';
+import { signup } from '@/features/auth/actions';
+import { Anchor, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
+
 export const SignupForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
-  const form = useForm<TSignupFormValues, (values: TSignupFormValues) => TSignupRequestValues>({
-    mode: 'uncontrolled',
-    validateInputOnChange: true,
-    initialValues: {
-      email: '',
-      password: '',
-      gender: '0',
-    },
-    validate: {
-      email: (v) => (!v ? 'メールアドレスは必須です' : /^\S+@\S+$/.test(v) ? null : '無効なメールアドレス'),
-      password: (v) => (!v ? 'パスワードは必須です' : v.length >= 4 ? null : '4文字以上入力してください'),
-    },
-    transformValues(values) {
-      const { gender, ...rest } = values;
-      return {
-        ...rest,
-        gender: Number(gender),
-      };
-    },
-  });
-
-  const handleSubmit = form.onSubmit(async (values) => {
-    setIsLoading(true); // ← ローディング開始
-    console.log(values);
-    await sleep(3000); // ← ダミーAPI（ここにfetchなどを入れる）
-    setIsLoading(false); // ← ローディング終了
-    router.push(Links.auth.signin);
-  });
-
   return (
-    <>
-      {/* <Paper withBorder maw={400} mt={30} p={40} radius='md' shadow='sm' w='100%'>
-        <form onSubmit={handleSubmit}>
-          <TextInput
-            required
-            key={form.key('email')}
-            label='メールアドレス'
-            placeholder='you@mail.com'
-            radius='md'
-            {...form.getInputProps('email')}
-          />
-          <PasswordInput
-            required
-            key={form.key('password')}
-            label='パスワード'
-            mt={24}
-            radius='md'
-            {...form.getInputProps('password')}
-          />
-          <Radio.Group
-            name='gender'
-            label='性別'
-            mt={24}
-            withAsterisk
-            key={form.key('gender')}
-            {...form.getInputProps('gender')}
-          >
-            <Group mt='xs'>
-              <Radio value='0' label='回答しない' />
-              <Radio value='1' label='男性' />
-              <Radio value='2' label='女性' />
-            </Group>
-          </Radio.Group>
-          <Button fullWidth disabled={isLoading || !form.isValid()} mt='xl' radius='md' type='submit'>
-            登録
-          </Button>
-          <Anchor
-            component={Link}
-            underline='always'
-            size={'12px'}
-            href={Links.auth.signin}
-            mt={14}
-            className='u-display--block u-align--right'
-          >
-            アカウントをお持ちの方はこちら
-          </Anchor>
-        </form>
-      </Paper>
+    <form>
+      <Stack gap='md' w={400}>
+        <Title order={2} ta='center'>
+          新規登録
+        </Title>
 
-      {isLoading && <FullScreenLoader />} */}
-    </>
+        <TextInput label='メールアドレス' name='email' type='email' placeholder='your@email.com' required />
+
+        <div>
+          <Text component='label' htmlFor='password' size='sm'>
+            パスワード
+          </Text>
+          <PasswordInput placeholder='パスワードを入力' id='password' name='password' required />
+        </div>
+
+        <div>
+          <Text component='label' htmlFor='confirm-password' size='sm'>
+            パスワード確認
+          </Text>
+          <PasswordInput placeholder='パスワードを再入力' id='confirm-password' name='confirmPassword' required />
+        </div>
+
+        <div>
+          <DefaultButton type='submit' formAction={signup} fullWidth color='primary'>
+            新規登録
+          </DefaultButton>
+
+          <Group justify='center' mt={40} gap={0}>
+            <Text size='sm'>アカウントをお持ちの方は</Text>
+            <Anchor href={Links.auth.signin} size='sm'>
+              こちら
+            </Anchor>
+          </Group>
+        </div>
+      </Stack>
+    </form>
   );
 };

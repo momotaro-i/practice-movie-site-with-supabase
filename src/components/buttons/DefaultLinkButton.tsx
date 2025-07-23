@@ -17,9 +17,25 @@ export const DefaultLinkButton = ({ href, component, target, ...rest }: CustomBu
   return (
     <MantineProvider theme={mantineButtonTheme}>
       {component === 'Link' ? (
-        <Button component={Link} href={href} {...rest} />
+        <Button
+          component={Link}
+          href={href}
+          style={{
+            transition: 'all 0.2s ease-in-out',
+          }}
+          {...rest}
+        />
       ) : (
-        <Button component='a' href={href} target={target} rel={safeRel} {...rest} />
+        <Button
+          component='a'
+          href={href}
+          target={target}
+          rel={safeRel}
+          style={{
+            transition: 'all 0.2s ease-in-out',
+          }}
+          {...rest}
+        />
       )}
     </MantineProvider>
   );

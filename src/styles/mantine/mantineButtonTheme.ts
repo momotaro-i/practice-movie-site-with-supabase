@@ -2,24 +2,24 @@ import { createTheme, defaultVariantColorsResolver, VariantColorsResolver } from
 
 const customColorMap = {
   primary: {
-    base: 'var(--primary)',
-    hover: 'var(--primary-hover, #fbb93d)',
-    text: 'var(--white)',
+    base: '#3d6b99',
+    hover: '#1f5c99',
+    text: '#ffffff',
   },
   secondary: {
-    base: 'var(--secondary)',
-    hover: 'var(--secondary-hover, #ffdaaa)',
-    text: 'var(--black)',
+    base: '#7a8a99',
+    hover: '#5c7a99',
+    text: '#ffffff',
   },
   danger: {
-    base: 'var(--danger, #ff4d4f)',
-    hover: 'var(--danger-hover, #e63946)',
-    text: 'var(--white)',
+    base: '#e63946',
+    hover: '#c5303b',
+    text: '#ffffff',
   },
   default: {
-    base: 'var(--black)',
-    hover: 'rgb(176, 176, 176)',
-    text: 'var(--white)',
+    base: '#778899',
+    hover: '#5c7a99',
+    text: '#ffffff',
   },
 };
 
@@ -52,8 +52,8 @@ const variantColorResolver: VariantColorsResolver = (input) => {
       return {
         background: 'transparent',
         color: current.base,
-        hover: 'rgba(0, 0, 0, 0.05)',
         border: 'none',
+        hover: 'rgba(0, 0, 0, 0.05)',
       };
     default:
       return defaultVariantColorsResolver(input);

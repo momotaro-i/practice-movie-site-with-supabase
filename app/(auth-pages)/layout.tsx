@@ -1,10 +1,12 @@
+'use client';
+
+import '@/styles/globals.scss';
 import { Box } from '@mantine/core';
 import { ReactNode } from 'react';
-type Props = {
-  children: ReactNode;
-};
 
-export const AuthPageLayout = ({ children }: Props) => {
+type Props = { children: ReactNode };
+
+export default function AuthLayout({ children }: Props) {
   return (
     <Box
       style={{
@@ -18,4 +20,4 @@ export const AuthPageLayout = ({ children }: Props) => {
       {children}
     </Box>
   );
-};
+}

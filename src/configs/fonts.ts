@@ -17,7 +17,7 @@ export const notoSansJP = Noto_Sans_JP({
 });
 
 // 一覧にまとめる
-export const fonts = {
+const fonts = {
   roboto,
   notoSansJP,
 } as const;

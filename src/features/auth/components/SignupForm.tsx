@@ -1,14 +1,10 @@
-import { Anchor, Button, Group, Paper, PasswordInput, Radio, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
-
-import { FullScreenLoader } from '@/components/loader/FullScreenLoader';
 
 import { Links } from '@/configs/links';
 import { TSignupFormValues, TSignupRequestValues } from '@/features/auth/types';
 import { sleep } from '@/utils';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 export const SignupForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,7 +40,7 @@ export const SignupForm = () => {
 
   return (
     <>
-      <Paper withBorder maw={400} mt={30} p={40} radius='md' shadow='sm' w='100%'>
+      {/* <Paper withBorder maw={400} mt={30} p={40} radius='md' shadow='sm' w='100%'>
         <form onSubmit={handleSubmit}>
           <TextInput
             required
@@ -92,7 +88,7 @@ export const SignupForm = () => {
         </form>
       </Paper>
 
-      {isLoading && <FullScreenLoader />}
+      {isLoading && <FullScreenLoader />} */}
     </>
   );
 };

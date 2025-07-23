@@ -1,10 +1,13 @@
+'use client';
+
 // app/layout.tsx
 import { notoSansJP, roboto } from '@/configs/fonts';
+import '@/styles/globals.scss';
 import { mantineBaseTheme } from '@/styles/mantine/mantineBaseTheme';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
 import { ReactNode } from 'react';
 import { ServerStyleSheet } from 'styled-components';
-import '../styles/globals.scss';
 
 type Props = { children: ReactNode };
 

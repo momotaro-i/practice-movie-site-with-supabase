@@ -1,3 +1,5 @@
+'use client';
+
 import { mantineButtonTheme } from '@/styles/mantine/mantineButtonTheme';
 import { Button, ButtonProps, MantineProvider } from '@mantine/core';
 import { ComponentPropsWithoutRef } from 'react';

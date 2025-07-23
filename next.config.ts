@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   compiler: {
     styledComponents: true,
   },
+  images: {
+    domains: ['dummyimage.com'],
+  },
   webpack: (config, { dev }) => {
     if (dev) {
       config.infrastructureLogging = {

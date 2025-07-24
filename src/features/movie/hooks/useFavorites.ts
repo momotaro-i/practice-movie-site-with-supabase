@@ -1,27 +1,26 @@
-import { useSession } from '@/components/SessionProvider';
+import { Links } from '@/configs/links';
 import { createClient } from '@/utils/supabase/client';
+import { UserContext } from 'app/ClientRoot';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 export const useFavorites = () => {
   const supabase = createClient();
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
-  const session = useSession();
+  const user = useContext(UserContext);
   const router = useRouter();
 
   // ログイン中のユーザーのお気に入り状況を取得
   useEffect(() => {
-    if (!session) return;
+    if (!user) return;
 
     const fetchFavorites = async () => {
-      const user = await supabase.auth.getUser();
-      if (user.data.user) {
-        const { data: favorites } = await supabase
-          .from('favorites')
-          .select('title_id')
-          .eq('user_id', user.data.user.id);
+      if (user) {
+        // user_idが一致するtitle_idを取得
+        const { data: favorites } = await supabase.from('favorites').select('title_id').eq('user_id', user.id);
 
         if (favorites) {
+          // お気に入りのtitle_idを配列に変換
           const ids = favorites.map((favorite) => favorite.title_id);
           setFavoriteIds(new Set(ids));
         }
@@ -29,26 +28,23 @@ export const useFavorites = () => {
     };
 
     fetchFavorites();
-  }, [session, supabase]);
+  }, [user, supabase]);
 
   const toggleFavorite = async (id: number) => {
-    if (!session) {
-      router.push('/signin');
+    // ログインしていなかったらサインインページへリダイレクト
+    if (!user) {
+      router.push(Links.auth.signin);
       return;
     }
 
     try {
-      const { data } = await supabase.auth.getUser();
-      const user = data.user;
-      if (!user) return;
-
       const isFavorite = favoriteIds.has(id);
 
       if (isFavorite) {
-        // 削除
+        // user_idとtitle_idが一致するレコードを削除
         await supabase.from('favorites').delete().eq('user_id', user.id).eq('title_id', id);
       } else {
-        // 追加
+        // お気に入りに追加
         await supabase.from('favorites').insert({
           user_id: user.id,
           title_id: id,

@@ -8,7 +8,7 @@ import { FaRegStar, FaStar } from 'react-icons/fa';
 import styled from 'styled-components';
 
 interface MovieCardProps {
-  item: TItem & { like_count: number };
+  item: TItem & { like_count?: number };
   isFavorite: boolean;
   onToggleFavorite: (id: number) => void;
 }
@@ -24,7 +24,7 @@ export const MovieCard = ({ item, isFavorite, onToggleFavorite }: MovieCardProps
           <SStarIcon>
             {isFavorite ? <FaStar color='white' size={20} /> : <FaRegStar color='white' size={20} />}
           </SStarIcon>
-          <Text size='md'>{item.like_count}</Text>
+          {item.like_count !== undefined && <Text size='md'>{item.like_count}</Text>}
         </SFavoriteButton>
       </SImageWrapper>
       <Text className='u-mt--5'>{item.title}</Text>

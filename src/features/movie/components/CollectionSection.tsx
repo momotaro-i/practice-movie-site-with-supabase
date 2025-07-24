@@ -5,6 +5,7 @@ import { Carousel } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
 import { Text, Title } from '@mantine/core';
 import { MovieCard } from './MovieCard';
+
 interface CollectionSectionProps {
   collection: TCollection & {
     items: (TItem & { like_count: number })[];

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { Links } from '@/configs/links';
 import { createClient } from '@/utils/supabase/server';
 
 export async function login(formData: FormData) {
@@ -20,11 +21,11 @@ export async function login(formData: FormData) {
   if (error) {
     console.error(error);
 
-    redirect('/error');
+    redirect(Links.error);
   }
 
   revalidatePath('/', 'layout');
-  redirect('/');
+  redirect(Links.home);
 }
 
 export async function signup(formData: FormData) {
@@ -40,9 +41,9 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    redirect('/error');
+    redirect(Links.error);
   }
 
   revalidatePath('/', 'layout');
-  redirect('/signup?send=true');
+  redirect(Links.auth.signup + '?send=true');
 }

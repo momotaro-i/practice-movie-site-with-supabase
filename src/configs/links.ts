@@ -1,8 +1,12 @@
 export const Links = {
   auth: {
-    signin: '/signin',
-    signup: '/signup',
+    signin: '/auth/signin',
+    signup: '/auth/signup',
+    signout: '/auth/signout',
   },
-  about: '/about',
+  mypage: {
+    favorite: '/mypage/favorite',
+  },
   home: '/',
+  error: '/error',
 };

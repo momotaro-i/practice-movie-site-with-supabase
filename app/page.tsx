@@ -1,10 +1,10 @@
 'use client';
 
-import { ThemeSection } from '@/components/movie/ThemeSection';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
-import { useFavorites } from '@/hooks/useFavorites';
-import { useMovieData } from '@/hooks/useMovieData';
+import { ThemeSection } from '@/features/movie/components/ThemeSection';
+import { useFavorites } from '@/features/movie/hooks/useFavorites';
+import { useMovieData } from '@/features/movie/hooks/useMovieData';
 import { Flex } from '@mantine/core';
 
 export default function Home() {

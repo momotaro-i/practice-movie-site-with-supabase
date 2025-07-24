@@ -1,3 +1,4 @@
+import { Links } from '@/configs/links';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   revalidatePath('/', 'layout');
-  return NextResponse.redirect(new URL('/signin', req.url), {
+  return NextResponse.redirect(new URL(Links.auth.signin, req.url), {
     status: 302,
   });
 }

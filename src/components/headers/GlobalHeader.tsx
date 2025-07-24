@@ -1,14 +1,14 @@
+import { Links } from '@/configs/links';
 import { Anchor, Autocomplete, Burger, Group, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { FaSearch } from 'react-icons/fa';
-
 type Props = {
   isLoggedIn: boolean;
 };
 export const GlobalHeader = ({ isLoggedIn }: Props) => {
   const links = [
-    { link: '/', label: 'ホーム' },
-    { link: isLoggedIn ? '/favorite' : '/signin', label: isLoggedIn ? 'お気に入り' : 'サインイン' },
+    { link: Links.home, label: 'ホーム' },
+    { link: Links.mypage.favorite, label: 'お気に入り' },
   ];
   const [opened, { toggle }] = useDisclosure(false);
 
@@ -31,6 +31,10 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
 
   return (
     <Group
+      pos='fixed'
+      top={0}
+      left={0}
+      w='100%'
       component='header'
       justify='space-between'
       px={20}
@@ -39,6 +43,7 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
           backgroundColor: theme.colors.primary[7],
           height: '60px',
           display: 'flex',
+          zIndex: 2,
         },
       })}
     >
@@ -59,6 +64,27 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
       <Group>
         <Group ml={50} gap={10}>
           {items}
+          {isLoggedIn ? (
+            <form action={Links.auth.signout} method='post' style={{ cursor: 'pointer' }}>
+              <button type='submit' className='hover-opacity' style={{ fontWeight: 500, color: 'white' }}>
+                サインアウト
+              </button>
+            </form>
+          ) : (
+            <Anchor
+              href={Links.auth.signin}
+              className='hover-opacity'
+              styles={(theme) => ({
+                root: {
+                  padding: '0.5rem',
+                  fontWeight: 500,
+                  color: theme.white,
+                },
+              })}
+            >
+              サインイン
+            </Anchor>
+          )}
         </Group>
         <Autocomplete
           placeholder='Search'

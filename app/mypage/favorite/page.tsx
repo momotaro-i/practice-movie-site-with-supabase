@@ -3,7 +3,7 @@
 import { Links } from '@/configs/links';
 import { MovieCard } from '@/features/movie/components/MovieCard';
 import { useFavorites } from '@/features/movie/hooks/useFavorites';
-import { TItem } from '@/types';
+import { TItemWithFavoriteCount } from '@/types';
 import { createClient } from '@/utils/supabase/client';
 import { Box, Flex, Text } from '@mantine/core';
 import { UserContext } from 'app/ClientRoot';
@@ -14,7 +14,7 @@ const FavoritePage = () => {
   const user = useContext(UserContext);
   const router = useRouter();
   const supabase = createClient();
-  const [favoriteItems, setFavoriteItems] = useState<(TItem & { like_count?: number })[]>([]);
+  const [favoriteItems, setFavoriteItems] = useState<TItemWithFavoriteCount[]>([]);
   const { favoriteIds: globalFavoriteIds, toggleFavorite } = useFavorites();
 
   useEffect(() => {

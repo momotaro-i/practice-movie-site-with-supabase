@@ -14,10 +14,17 @@ export type TResponse = {
   })[];
 };
 
-export type TItemsDataWithFavoriteCount = Omit<TResponse, 'collections'> & {
-  collections: (TCollection & {
-    items: (TItem & {
-      like_count?: number;
-    })[];
-  })[];
+// favorite_countを加えたデータ（画面やロジックで使用）
+export type TMoviesInfoWithFavorites = {
+  id: number;
+  name: string;
+  collections: TCollectionWithFavorites[];
+};
+
+export type TCollectionWithFavorites = TCollection & {
+  items: TItemWithFavoriteCount[];
+};
+
+export type TItemWithFavoriteCount = TItem & {
+  favorite_count: number;
 };

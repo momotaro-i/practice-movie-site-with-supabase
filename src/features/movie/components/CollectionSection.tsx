@@ -1,15 +1,13 @@
 'use client';
 
-import { TCollection, TItem } from '@/types';
+import { TCollectionWithFavorites } from '@/types';
 import { Carousel } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
 import { Text, Title } from '@mantine/core';
 import { MovieCard } from './MovieCard';
 
 interface CollectionSectionProps {
-  collection: TCollection & {
-    items: (TItem & { like_count: number })[];
-  };
+  collection: TCollectionWithFavorites;
   favoriteIds: Set<number>;
   onToggleFavorite: (id: number) => void;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { TItem } from '@/types';
+import { TItemWithFavoriteCount } from '@/types';
 import { Box, Skeleton, Text } from '@mantine/core';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ import { FaRegStar, FaStar } from 'react-icons/fa';
 import styled from 'styled-components';
 
 interface MovieCardProps {
-  item: TItem & { like_count?: number };
+  item: TItemWithFavoriteCount;
   isFavorite: boolean;
   onToggleFavorite: (id: number) => void;
 }
@@ -24,7 +24,7 @@ export const MovieCard = ({ item, isFavorite, onToggleFavorite }: MovieCardProps
           <SStarIcon>
             {isFavorite ? <FaStar color='white' size={20} /> : <FaRegStar color='white' size={20} />}
           </SStarIcon>
-          {item.like_count !== undefined && <Text size='md'>{item.like_count}</Text>}
+          {item.favorite_count !== undefined && <Text size='md'>{item.favorite_count}</Text>}
         </SFavoriteButton>
       </SImageWrapper>
       <Text className='u-mt--5'>{item.title}</Text>

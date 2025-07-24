@@ -1,10 +1,10 @@
-import { TItemsDataWithFavoriteCount, TItemsFavoriteCount, TResponse } from '@/types';
+import { TItemsFavoriteCount, TMoviesInfoWithFavorites, TResponse } from '@/types';
 import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
 export const useMovieData = () => {
   const supabase = createClient();
-  const [data, setData] = useState<TItemsDataWithFavoriteCount[]>();
+  const [data, setData] = useState<TMoviesInfoWithFavorites[]>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,10 +41,11 @@ export const useMovieData = () => {
             collections: theme.collections.map((collection) => ({
               ...collection,
               items: collection.items.map((item) => {
-                const match = favoritesItems.find((f) => f.title_id === item.id);
+                // いいね数を検索
+                const favoriteCount = favoritesItems?.find((f) => f.title_id === item.id);
                 return {
                   ...item,
-                  like_count: match?.like_count ?? 0,
+                  favorite_count: favoriteCount?.like_count || 0,
                 };
               }),
             })),

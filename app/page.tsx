@@ -5,6 +5,7 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useMovieData } from '@/hooks/useMovieData';
+import { Flex } from '@mantine/core';
 
 export default function Home() {
   const { data, loading, error } = useMovieData();
@@ -19,7 +20,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <Flex direction='column' gap='40px'>
       {data &&
         data.map((theme, index) => (
           <ThemeSection
@@ -30,6 +31,6 @@ export default function Home() {
             onToggleFavorite={toggleFavorite}
           />
         ))}
-    </>
+    </Flex>
   );
 }

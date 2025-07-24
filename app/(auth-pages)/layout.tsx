@@ -1,23 +1,12 @@
-'use client';
+// app/(auth-pages)/layout.tsx
+import { Card, Center } from '@mantine/core';
 
-import '@/styles/globals.scss';
-import { Box } from '@mantine/core';
-import { ReactNode } from 'react';
-
-type Props = { children: ReactNode };
-
-export default function AuthLayout({ children }: Props) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Box
-      style={{
-        alignItems: 'center',
-        backgroundColor: '#f8f9fa',
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: '100vh',
-      }}
-    >
-      {children}
-    </Box>
+    <Center style={{ minHeight: 'calc(100vh - 60px)' }}>
+      <Card bg='#fff' p={20} style={{ width: 'fit-content' }}>
+        {children}
+      </Card>
+    </Center>
   );
 }

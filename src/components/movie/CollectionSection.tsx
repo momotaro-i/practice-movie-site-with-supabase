@@ -1,8 +1,10 @@
 'use client';
 
 import { TCollection, TItem } from '@/types';
+import { Carousel } from '@mantine/carousel';
+import '@mantine/carousel/styles.css';
+import { Text, Title } from '@mantine/core';
 import { MovieCard } from './MovieCard';
-
 interface CollectionSectionProps {
   collection: TCollection & {
     items: (TItem & { like_count: number })[];
@@ -13,21 +15,22 @@ interface CollectionSectionProps {
 
 export const CollectionSection = ({ collection, favoriteIds, onToggleFavorite }: CollectionSectionProps) => {
   return (
-    <div className='mt-5'>
-      <div className='border-lime-500 border-l-solid border-l-2 pl-5'>
-        <h3 className='text-2xl font-bold'>{collection.title}</h3>
-        <p className='text-md'>{collection.description}</p>
-      </div>
-      <div className='flex flex-wrap gap-4'>
+    <div className='u-mt--20'>
+      <Title order={3}>{collection.title}</Title>
+      <Text>{collection.description}</Text>
+      <Carousel
+        className='u-mt--10'
+        withControls={false}
+        slideSize={{ base: '300px', sm: '300px', md: '300px' }}
+        slideGap={{ base: '10px', sm: '10px' }}
+        emblaOptions={{ loop: true, align: 'start' }}
+      >
         {collection.items?.map((item) => (
-          <MovieCard
-            key={item.id}
-            item={item}
-            isFavorite={favoriteIds.has(item.id)}
-            onToggleFavorite={onToggleFavorite}
-          />
+          <Carousel.Slide key={item.id}>
+            <MovieCard item={item} isFavorite={favoriteIds.has(item.id)} onToggleFavorite={onToggleFavorite} />
+          </Carousel.Slide>
         ))}
-      </div>
+      </Carousel>
     </div>
   );
 };

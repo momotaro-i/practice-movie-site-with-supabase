@@ -1,18 +1,34 @@
+'use client';
 import { createTheme } from '@mantine/core';
 
 export const mantineBaseTheme = createTheme({
+  black: '#333',
   colors: {
+    //https://mantine.dev/colors-generator/?color=282d33
+    darkBg: [
+      '#f4f5f6',
+      '#e7e7e7',
+      '#cccccc',
+      '#aeb0b2',
+      '#95989c',
+      '#858990',
+      '#7b828a',
+      '#697078',
+      '#5c636c',
+      '#282d33',
+    ],
+    //https://mantine.dev/colors-generator/?color=3d6b99
     primary: [
-      '#778899', // 最も明るい色
-      '#7a8a99',
-      '#5c7a99',
+      '#ecf5ff',
+      '#dde7f1',
+      '#bacde0',
+      '#94b1cf',
+      '#759ac1',
+      '#608bb8',
+      '#5484b5',
+      '#4471a0',
       '#3d6b99',
-      '#1f5c99',
-      '#004d99', // 最も暗い色
-      '#004d99',
-      '#004d99',
-      '#004d99',
-      '#004d99',
+      '#2a5781',
     ],
   },
   cursorType: 'pointer',
@@ -20,21 +36,21 @@ export const mantineBaseTheme = createTheme({
   components: {
     Title: {
       defaultProps: {
-        color: '#333',
+        color: '#fff',
       },
       styles: () => ({
         root: {
-          color: '#333',
+          color: '#fff',
         },
       }),
     },
     Text: {
       defaultProps: {
-        color: '#333',
+        color: '#fff',
       },
       styles: () => ({
         root: {
-          color: '#333',
+          color: '#fff',
         },
       }),
     },

@@ -34,11 +34,11 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
       component='header'
       justify='space-between'
       px={20}
-      py={10}
       styles={(theme) => ({
         root: {
-          backgroundColor: theme.colors.primary[0],
-          borderBottom: '1px solid #64748b',
+          backgroundColor: theme.colors.primary[7],
+          height: '60px',
+          display: 'flex',
         },
       })}
     >
@@ -48,7 +48,6 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
           order={1}
           styles={(theme) => ({
             root: {
-              color: theme.white,
               fontWeight: 700,
             },
           })}
@@ -63,22 +62,22 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
         </Group>
         <Autocomplete
           placeholder='Search'
-          leftSection={<FaSearch size={16} color='#475569' />}
+          leftSection={<FaSearch size={16} color='#5c636c' />}
           visibleFrom='xs'
           styles={(theme) => ({
             input: {
-              borderColor: theme.colors.primary[0],
+              borderColor: theme.colors.darkBg[8],
               backgroundColor: '#ffffff',
-              color: theme.colors.primary[0],
+              color: theme.colors.darkBg[8],
               '&:focus': {
                 borderColor: '#1e40af',
               },
               '&::placeholder': {
-                color: theme.colors.primary[0],
+                color: theme.colors.darkBg[8],
               },
             },
             placeholder: {
-              color: theme.colors.primary[0],
+              color: theme.colors.darkBg[8],
             },
           })}
         />

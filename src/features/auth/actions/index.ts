@@ -14,7 +14,9 @@ export async function login(formData: FormData) {
 
   // 入力値の検証
   if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
-    redirect('/error?message=invalid-input');
+    // redirect('/error?message=invalid-input');
+    console.error('Signin input error');
+    return;
   }
 
   const data: LoginFormData = {
@@ -25,14 +27,16 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect('/error');
+    console.error('Signin error:', error.message);
   }
 
   revalidatePath('/', 'layout');
-  redirect('/account');
+  redirect('/');
 }
 
 export async function signup(formData: FormData) {
+  console.log(formData);
+
   const supabase = await createClient();
 
   const email = formData.get('email');
@@ -40,7 +44,7 @@ export async function signup(formData: FormData) {
 
   // 入力値の検証
   if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
-    // FIXME: エラーを返す
+    console.error('Signup error');
     return;
   }
 
@@ -52,9 +56,9 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    redirect('/error');
+    console.error('Signin error:', error.message);
   }
 
   revalidatePath('/', 'layout');
-  redirect('/account');
+  redirect('/signin');
 }

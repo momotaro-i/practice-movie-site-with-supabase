@@ -3,82 +3,87 @@
 @for $i from 0 through 200 {
   .u-m--#{$i} {
     @include pc {
-      margin: $i * 0.1rem !important;
+      margin: $i * 1px !important;
     }
   }
   .u-mt--#{$i} {
     @include pc {
-      margin-top: $i * 0.1rem !important;
+      margin-top: $i * 1px !important;
     }
   }
   .u-mr--#{$i} {
     @include pc {
-      margin-right: $i * 0.1rem !important;
+      margin-right: $i * 1px !important;
     }
   }
   .u-mb--#{$i} {
     @include pc {
-      margin-bottom: $i * 0.1rem !important;
+      margin-bottom: $i * 1px !important;
     }
   }
   .u-ml--#{$i} {
     @include pc {
-      margin-left: $i * 0.1rem !important;
+      margin-left: $i * 1px !important;
     }
   }
   .u-mx--#{$i} {
     @include pc {
-      margin-left: $i * 0.1rem !important;
-      margin-right: $i * 0.1rem !important;
+      margin-left: $i * 1px !important;
+      margin-right: $i * 1px !important;
     }
   }
   .u-my--#{$i} {
     @include pc {
-      margin-top: $i * 0.1rem !important;
-      margin-bottom: $i * 0.1rem !important;
+      margin-top: $i * 1px !important;
+      margin-bottom: $i * 1px !important;
     }
   }
   .u-p--#{$i} {
     @include pc {
-      padding: $i * 0.1rem !important;
+      padding: $i * 1px !important;
     }
   }
   .u-pt--#{$i} {
     @include pc {
-      padding-top: $i * 0.1rem !important;
+      padding-top: $i * 1px !important;
     }
   }
   .u-pr--#{$i} {
     @include pc {
-      padding-right: $i * 0.1rem !important;
+      padding-right: $i * 1px !important;
     }
   }
   .u-pb--#{$i} {
     @include pc {
-      padding-bottom: $i * 0.1rem !important;
+      padding-bottom: $i * 1px !important;
     }
   }
   .u-pl--#{$i} {
     @include pc {
-      padding-left: $i * 0.1rem !important;
+      padding-left: $i * 1px !important;
     }
   }
   .u-px--#{$i} {
     @include pc {
-      padding-left: $i * 0.1rem !important;
-      padding-right: $i * 0.1rem !important;
+      padding-left: $i * 1px !important;
+      padding-right: $i * 1px !important;
     }
   }
   .u-py--#{$i} {
     @include pc {
-      padding-top: $i * 0.1rem !important;
-      padding-bottom: $i * 0.1rem !important;
+      padding-top: $i * 1px !important;
+      padding-bottom: $i * 1px !important;
     }
   }
 }
-
+.u-mx--auto {
+  @include pc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 // SP
-@for $i from 0 through 150 {
+@for $i from 0 through 110 {
   .u-mSp--#{$i} {
     @include sp {
       margin: $i * 0.1rem !important;
@@ -152,11 +157,5 @@
       padding-top: $i * 0.1rem !important;
       padding-bottom: $i * 0.1rem !important;
     }
-  }
-}
-.u-mx-auto {
-  @include pc {
-    margin-left: auto;
-    margin-right: auto;
   }
 }

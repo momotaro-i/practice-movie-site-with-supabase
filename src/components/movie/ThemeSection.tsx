@@ -1,7 +1,8 @@
 'use client';
 
 import { TItemsDataWithFavoriteCount } from '@/types';
-import clsx from 'clsx';
+import { Box, Flex, Title } from '@mantine/core';
+import styled from 'styled-components';
 import { CollectionSection } from './CollectionSection';
 
 interface ThemeSectionProps {
@@ -13,23 +14,33 @@ interface ThemeSectionProps {
 
 export const ThemeSection = ({ theme, index, favoriteIds, onToggleFavorite }: ThemeSectionProps) => {
   return (
-    <div
-      key={theme.id}
-      className={clsx({
-        'mt-20': index !== 0,
-      })}
-    >
-      <h2 className='text-4xl font-bold '>{theme.name}</h2>
-      {theme.collections
-        ?.filter((col) => col.theme_id === theme.id)
-        .map((collection) => (
-          <CollectionSection
-            key={collection.id}
-            collection={collection}
-            favoriteIds={favoriteIds}
-            onToggleFavorite={onToggleFavorite}
-          />
-        ))}
-    </div>
+    <Box>
+      <STitle order={2}>{theme.name}</STitle>
+      <Flex direction='column' gap='20px'>
+        {theme.collections
+          ?.filter((col) => col.theme_id === theme.id)
+          .map((collection) => (
+            <CollectionSection
+              key={collection.id}
+              collection={collection}
+              favoriteIds={favoriteIds}
+              onToggleFavorite={onToggleFavorite}
+            />
+          ))}
+      </Flex>
+    </Box>
   );
 };
+
+const STitle = styled(Title)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  &::before {
+    content: "'";
+    display: block;
+    width: 0.3rem;
+    height: 100%;
+    background-color: var(--white);
+  }
+`;

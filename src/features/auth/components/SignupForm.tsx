@@ -9,21 +9,21 @@ export const SignupForm = () => {
   return (
     <form>
       <Stack gap='md' w={400}>
-        <Title order={2} ta='center'>
+        <Title order={2} ta='center' c='black'>
           新規登録
         </Title>
 
         <TextInput label='メールアドレス' name='email' type='email' placeholder='your@email.com' required />
 
         <div>
-          <Text component='label' htmlFor='password' size='sm'>
+          <Text component='label' htmlFor='password' size='sm' c='black'>
             パスワード
           </Text>
           <PasswordInput placeholder='パスワードを入力' id='password' name='password' required />
         </div>
 
         <div>
-          <Text component='label' htmlFor='confirm-password' size='sm'>
+          <Text component='label' htmlFor='confirm-password' size='sm' c='black'>
             パスワード確認
           </Text>
           <PasswordInput placeholder='パスワードを再入力' id='confirm-password' name='confirmPassword' required />
@@ -34,8 +34,10 @@ export const SignupForm = () => {
             新規登録
           </DefaultButton>
 
-          <Group justify='center' mt={40} gap={0}>
-            <Text size='sm'>アカウントをお持ちの方は</Text>
+          <Group justify='center' mt={30} gap={0}>
+            <Text size='sm' c='black'>
+              アカウントをお持ちの方は
+            </Text>
             <Anchor href={Links.auth.signin} size='sm'>
               こちら
             </Anchor>

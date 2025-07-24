@@ -67,7 +67,7 @@ export default [
       'typescript-sort-keys/interface': 'warn',
 
       'typescript-sort-keys/string-enum': 'warn',
-      'typescript-eslint/no-explicit-any': false,
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];

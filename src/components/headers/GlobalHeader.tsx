@@ -1,7 +1,7 @@
-import { Links } from '@/configs/links';
-import { Anchor, Autocomplete, Burger, Group, Title } from '@mantine/core';
+import { Anchor, Burger, Group, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { FaSearch } from 'react-icons/fa';
+
+import { Links } from '@/configs/links';
 type Props = {
   isLoggedIn: boolean;
 };
@@ -14,9 +14,9 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
 
   const items = links.map((link) => (
     <Anchor
-      key={link.label}
-      href={link.link}
       className='hover-opacity'
+      href={link.link}
+      key={link.label}
       styles={(theme) => ({
         root: {
           padding: '0.5rem',
@@ -31,13 +31,13 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
 
   return (
     <Group
-      pos='fixed'
-      top={0}
-      left={0}
-      w='100%'
       component='header'
       justify='space-between'
+      left={0}
+      pos='fixed'
       px={20}
+      top={0}
+      w='100%'
       styles={(theme) => ({
         root: {
           backgroundColor: theme.colors.primary[7],
@@ -48,10 +48,10 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
       })}
     >
       <Group>
-        <Burger opened={opened} onClick={toggle} size='sm' hiddenFrom='sm' color='#ffffff' />
+        <Burger color='#ffffff' hiddenFrom='sm' opened={opened} size='sm' onClick={toggle} />
         <Title
           order={1}
-          styles={(theme) => ({
+          styles={() => ({
             root: {
               fontWeight: 700,
             },
@@ -62,18 +62,18 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
       </Group>
 
       <Group>
-        <Group ml={50} gap={10}>
+        <Group gap={10} ml={50}>
           {items}
           {isLoggedIn ? (
             <form action={Links.auth.signout} method='post' style={{ cursor: 'pointer' }}>
-              <button type='submit' className='hover-opacity' style={{ fontWeight: 500, color: 'white' }}>
+              <button className='hover-opacity' style={{ fontWeight: 500, color: 'white' }} type='submit'>
                 サインアウト
               </button>
             </form>
           ) : (
             <Anchor
-              href={Links.auth.signin}
               className='hover-opacity'
+              href={Links.auth.signin}
               styles={(theme) => ({
                 root: {
                   padding: '0.5rem',
@@ -86,27 +86,6 @@ export const GlobalHeader = ({ isLoggedIn }: Props) => {
             </Anchor>
           )}
         </Group>
-        <Autocomplete
-          placeholder='Search'
-          leftSection={<FaSearch size={16} color='#5c636c' />}
-          visibleFrom='xs'
-          styles={(theme) => ({
-            input: {
-              borderColor: theme.colors.darkBg[8],
-              backgroundColor: '#ffffff',
-              color: theme.colors.darkBg[8],
-              '&:focus': {
-                borderColor: '#1e40af',
-              },
-              '&::placeholder': {
-                color: theme.colors.darkBg[8],
-              },
-            },
-            placeholder: {
-              color: theme.colors.darkBg[8],
-            },
-          })}
-        />
       </Group>
     </Group>
   );

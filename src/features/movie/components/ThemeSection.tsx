@@ -1,18 +1,20 @@
 'use client';
 
-import { TItemsDataWithFavoriteCount } from '@/types';
 import { Box, Flex, Title } from '@mantine/core';
 import styled from 'styled-components';
+
+import { TMoviesInfoWithFavorites } from '@/types';
+
 import { CollectionSection } from './CollectionSection';
 
 interface ThemeSectionProps {
-  theme: TItemsDataWithFavoriteCount;
-  index: number;
   favoriteIds: Set<number>;
+  index: number;
   onToggleFavorite: (id: number) => void;
+  theme: TMoviesInfoWithFavorites;
 }
 
-export const ThemeSection = ({ theme, index, favoriteIds, onToggleFavorite }: ThemeSectionProps) => {
+export const ThemeSection = ({ favoriteIds, onToggleFavorite, theme }: ThemeSectionProps) => {
   return (
     <Box>
       <STitle order={2}>{theme.name}</STitle>
@@ -21,9 +23,9 @@ export const ThemeSection = ({ theme, index, favoriteIds, onToggleFavorite }: Th
           ?.filter((col) => col.theme_id === theme.id)
           .map((collection) => (
             <CollectionSection
-              key={collection.id}
               collection={collection}
               favoriteIds={favoriteIds}
+              key={collection.id}
               onToggleFavorite={onToggleFavorite}
             />
           ))}

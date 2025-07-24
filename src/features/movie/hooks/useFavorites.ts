@@ -1,19 +1,27 @@
-import { Links } from '@/configs/links';
-import { createClient } from '@/utils/supabase/client';
-import { UserContext } from 'app/ClientRoot';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
-export const useFavorites = () => {
+import { createClient } from '@/utils/supabase/client';
+
+import { Links } from '@/configs/links';
+import { TMoviesInfoWithFavorites } from '@/types';
+import { UserContext } from 'app/ClientRoot';
+
+type Props = {
+  data?: TMoviesInfoWithFavorites[];
+};
+export const useFavorites = ({ data }: Props) => {
   const supabase = createClient();
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
   const user = useContext(UserContext);
   const router = useRouter();
+  const [updateMoviesData, setUpdateMoviesData] = useState<TMoviesInfoWithFavorites[]>([]);
 
-  // ログイン中のユーザーのお気に入り状況を取得
   useEffect(() => {
     if (!user) return;
+    if (!data) return;
 
+    // ログイン中のユーザーのお気に入り状況を取得
     const fetchFavorites = async () => {
       if (user) {
         // user_idが一致するtitle_idを取得
@@ -28,7 +36,9 @@ export const useFavorites = () => {
     };
 
     fetchFavorites();
-  }, [user, supabase]);
+
+    setUpdateMoviesData(data ?? []);
+  }, [user, supabase, data]);
 
   const toggleFavorite = async (id: number) => {
     // ログインしていなかったらサインインページへリダイレクト
@@ -43,12 +53,36 @@ export const useFavorites = () => {
       if (isFavorite) {
         // user_idとtitle_idが一致するレコードを削除
         await supabase.from('favorites').delete().eq('user_id', user.id).eq('title_id', id);
+        // その作品のfavorite_countを1減らす
+        setUpdateMoviesData((prev) =>
+          prev.map((theme) => ({
+            ...theme,
+            collections: theme.collections.map((collection) => ({
+              ...collection,
+              items: collection.items.map((item) =>
+                item.id === id ? { ...item, favorite_count: item.favorite_count - 1 } : item
+              ),
+            })),
+          }))
+        );
       } else {
         // お気に入りに追加
         await supabase.from('favorites').insert({
           user_id: user.id,
           title_id: id,
         });
+        // その作品のfavorite_countを1増やす
+        setUpdateMoviesData((prev) =>
+          prev.map((theme) => ({
+            ...theme,
+            collections: theme.collections.map((collection) => ({
+              ...collection,
+              items: collection.items.map((item) =>
+                item.id === id ? { ...item, favorite_count: item.favorite_count + 1 } : item
+              ),
+            })),
+          }))
+        );
       }
 
       // 状態を更新
@@ -66,5 +100,5 @@ export const useFavorites = () => {
     }
   };
 
-  return { favoriteIds, toggleFavorite };
+  return { favoriteIds, toggleFavorite, updateMoviesData };
 };

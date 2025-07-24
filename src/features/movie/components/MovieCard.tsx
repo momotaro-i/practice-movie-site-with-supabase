@@ -1,25 +1,26 @@
 'use client';
 
-import { TItemWithFavoriteCount } from '@/types';
 import { Box, Skeleton, Text } from '@mantine/core';
 import Image from 'next/image';
 import { useState } from 'react';
 import { FaRegStar, FaStar } from 'react-icons/fa';
 import styled from 'styled-components';
 
+import { TItemWithFavoriteCount } from '@/types';
+
 interface MovieCardProps {
-  item: TItemWithFavoriteCount;
   isFavorite: boolean;
+  item: TItemWithFavoriteCount;
   onToggleFavorite: (id: number) => void;
 }
 
-export const MovieCard = ({ item, isFavorite, onToggleFavorite }: MovieCardProps) => {
+export const MovieCard = ({ isFavorite, item, onToggleFavorite }: MovieCardProps) => {
   const [loaded, setLoaded] = useState(false);
   return (
     <Box>
       <SImageWrapper>
-        {!loaded && <Skeleton w='100%' h='100%' radius='sm' />}
-        <Image src={item.image_url} alt={item.title} fill onLoad={() => setLoaded(true)} />
+        {!loaded && <Skeleton h='100%' radius='sm' w='100%' />}
+        <Image fill alt={item.title} src={item.image_url} onLoad={() => setLoaded(true)} />
         <SFavoriteButton onClick={() => onToggleFavorite(item.id)}>
           <SStarIcon>
             {isFavorite ? <FaStar color='white' size={20} /> : <FaRegStar color='white' size={20} />}

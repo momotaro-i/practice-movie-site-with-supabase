@@ -1,6 +1,8 @@
-import { TItemsFavoriteCount, TMoviesInfoWithFavorites, TResponse } from '@/types';
-import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
+
+import { createClient } from '@/utils/supabase/client';
+
+import { TItemsFavoriteCount, TMoviesInfoWithFavorites, TResponse } from '@/types';
 
 export const useMovieData = () => {
   const supabase = createClient();
@@ -25,10 +27,10 @@ export const useMovieData = () => {
           supabase.from('favorite_counts').select('*'),
         ]);
 
-        const { data: allItems, error: allItemsError } = itemsData as { data: TResponse[]; error: any };
+        const { data: allItems, error: allItemsError } = itemsData as { data: TResponse[]; error: Error | null };
         const { data: favoritesItems, error: favoritesError } = favoritesData as {
           data: TItemsFavoriteCount[];
-          error: any;
+          error: Error | null;
         };
 
         if (allItemsError || favoritesError) {

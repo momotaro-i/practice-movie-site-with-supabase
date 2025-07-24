@@ -3,9 +3,19 @@
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 import { Links } from '@/configs/links';
 import { signup } from '@/features/auth/actions';
+import { showSuccessNotification } from '@/utils/notifications';
 import { Anchor, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export const SignupForm = () => {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('send') === 'true') {
+      showSuccessNotification('確認メールを送信しました。\nメールに記載されたURLからサインインしてください。');
+    }
+  }, [searchParams]);
   return (
     <form>
       <Stack gap='md' w={400}>

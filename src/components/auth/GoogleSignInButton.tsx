@@ -1,6 +1,7 @@
 'use client';
 
 import { createClient } from '@/utils/supabase/client';
+import { Loader } from '@mantine/core';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 
@@ -16,6 +17,7 @@ declare global {
 
 const GoogleSignInButton = () => {
   const [nonce, setNonce] = useState<string>('');
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
     // nonceを生成
@@ -54,7 +56,13 @@ const GoogleSignInButton = () => {
 
   return (
     <>
-      <Script src='https://accounts.google.com/gsi/client' async />
+      <Script
+        src='https://accounts.google.com/gsi/client'
+        async
+        onLoad={() => {
+          setScriptLoaded(true);
+        }}
+      />
       <div
         id='g_id_onload'
         data-client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
@@ -65,6 +73,11 @@ const GoogleSignInButton = () => {
         data-nonce={nonce}
       ></div>
 
+      {!scriptLoaded && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40px' }}>
+          <Loader size='sm' />
+        </div>
+      )}
       <div
         className='g_id_signin'
         data-type='standard'

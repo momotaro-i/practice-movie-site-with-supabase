@@ -4,9 +4,23 @@ import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 import { Links } from '@/configs/links';
 import { login } from '@/features/auth/actions';
+import { showSuccessNotification } from '@/utils/notifications';
 import { Anchor, Divider, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export const SignInForm = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get('complete') === 'true') {
+      showSuccessNotification('登録が完了しました。\nログインしてください。');
+      // パラメータを消す
+      router.replace(Links.auth.signin);
+    }
+  }, [searchParams]);
+
   return (
     <form>
       <Stack gap='md' w={400}>

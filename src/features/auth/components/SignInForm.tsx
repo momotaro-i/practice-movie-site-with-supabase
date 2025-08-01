@@ -22,7 +22,7 @@ export const SignInForm = () => {
       // パラメータを消す
       router.replace(Links.auth.signin);
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   return (
     <form>

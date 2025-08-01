@@ -1,91 +1,62 @@
 'use client';
 
-import { createClient } from '@/utils/supabase/client';
 import { Loader } from '@mantine/core';
+import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 
-// Google Sign-In types
-interface CredentialResponse {
-  credential: string;
-  select_by: string;
-}
+import { createClient } from '@/utils/supabase/client';
 
-declare global {
-  var handleSignInWithGoogle: ((response: CredentialResponse) => void) | undefined;
-}
+import { Links } from '@/configs/links';
 
+// TODO: 本番はnonceを使用する
 const GoogleSignInButton = () => {
-  const [nonce, setNonce] = useState<string>('');
-  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const supabase = createClient();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // nonceを生成
-    const generateNonce = () => {
-      const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
-      setNonce(nonce);
-      return nonce;
-    };
-
-    const currentNonce = generateNonce();
-
-    // グローバル関数として定義
+    // Googleのコードが見つけられるように、グローバルスコープで利用可能である必要がある
     window.handleSignInWithGoogle = async (response: CredentialResponse) => {
-      try {
-        const supabase = createClient();
-        const { data, error } = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: response.credential,
-          nonce: currentNonce, // nonceを追加
-        });
-
-        if (error) throw error;
-
-        // ログイン成功後の処理
-        window.location.href = '/';
-      } catch (error) {
-        console.error('Error logging in with Google', error);
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: response.credential,
+      });
+      if (error) {
+        console.error(error);
+      } else {
+        console.log('Logged in user:', data);
+        router.push(Links.home); // ← ログイン後に遷移
       }
     };
-
-    return () => {
-      // クリーンアップ
-      window.handleSignInWithGoogle = undefined;
-    };
-  }, []);
-
+  }, [supabase.auth, router]);
   return (
     <>
-      <Script
-        src='https://accounts.google.com/gsi/client'
-        async
-        onLoad={() => {
-          setScriptLoaded(true);
-        }}
-      />
+      <Script async src='https://accounts.google.com/gsi/client' onLoad={() => setIsLoading(false)} />
       <div
-        id='g_id_onload'
+        data-auto_prompt='false'
+        data-callback='handleSignInWithGoogle'
         data-client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
         data-context='signin'
+        data-use_fedcm_for_prompt='true'
         data-ux_mode='popup'
-        data-callback='handleSignInWithGoogle'
-        data-auto_prompt='false'
-        data-nonce={nonce}
+        id='g_id_onload'
       ></div>
 
-      {!scriptLoaded && (
+      {isLoading && (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40px' }}>
           <Loader size='sm' />
         </div>
       )}
       <div
         className='g_id_signin'
-        data-type='standard'
-        data-shape='rectangular'
-        data-theme='outline'
-        data-text='signin_with'
-        data-size='large'
         data-logo_alignment='left'
+        data-shape='rectangular'
+        data-size='large'
+        data-text='signin_with'
+        data-theme='outline'
+        data-type='standard'
+        data-width='400'
       ></div>
     </>
   );

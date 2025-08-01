@@ -1,9 +1,11 @@
 'use client';
 
-import { TCollectionWithFavorites } from '@/types';
 import { Carousel } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
 import { Text, Title } from '@mantine/core';
+
+import { TCollectionWithFavorites } from '@/types';
+
 import { MovieCard } from './MovieCard';
 
 interface CollectionSectionProps {
@@ -19,14 +21,14 @@ export const CollectionSection = ({ collection, favoriteIds, onToggleFavorite }:
       <Text>{collection.description}</Text>
       <Carousel
         className='u-mt--10'
-        withControls={false}
-        slideSize={{ base: '300px', sm: '300px', md: '300px' }}
-        slideGap={{ base: '10px', sm: '10px' }}
         emblaOptions={{ loop: true, align: 'start' }}
+        slideGap={{ base: '10px', sm: '10px' }}
+        slideSize={{ base: '300px', sm: '300px', md: '300px' }}
+        withControls={false}
       >
         {collection.items?.map((item) => (
           <Carousel.Slide key={item.id}>
-            <MovieCard item={item} isFavorite={favoriteIds.has(item.id)} onToggleFavorite={onToggleFavorite} />
+            <MovieCard isFavorite={favoriteIds.has(item.id)} item={item} onToggleFavorite={onToggleFavorite} />
           </Carousel.Slide>
         ))}
       </Carousel>

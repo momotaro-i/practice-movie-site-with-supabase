@@ -5,9 +5,9 @@ export default function Head() {
   return (
     <>
       <title>{META_TITLE_BASE}</title>
-      <meta name='description' content='FIXME' />
-      <meta name='viewport' content='width=device-width, initial-scale=1' />
-      <link rel='icon' href='/favicon.ico' />
+      <meta content='FIXME' name='description' />
+      <meta content='width=device-width, initial-scale=1' name='viewport' />
+      <link href='/favicon.ico' rel='icon' />
     </>
   );
 }

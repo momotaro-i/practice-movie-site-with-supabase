@@ -9,6 +9,6 @@ export type SignupFormData = {
 };
 
 export type AuthActionResult = {
-  success: boolean;
   error?: string;
+  success: boolean;
 };

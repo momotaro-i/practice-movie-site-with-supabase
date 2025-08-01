@@ -1,5 +1,6 @@
-import { fetchJson } from '@/utils/fetch/fetchJson';
 import { useCallback, useRef, useState } from 'react';
+
+import { fetchJson } from '@/utils/fetch/fetchJson';
 
 /**
  * 任意のURLに対してGETリクエストを行うためのカスタムフック

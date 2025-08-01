@@ -1,7 +1,8 @@
 // src/hooks/useFetchPost.ts
 
-import { fetchJson } from '@/utils/fetch/fetchJson';
 import { useCallback, useRef, useState } from 'react';
+
+import { fetchJson } from '@/utils/fetch/fetchJson';
 
 /**
  * fetch() の body に渡せる形式

@@ -1,17 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import { useProfile } from '../hooks/useProfile';
 
 type Props = {
   user: {
-    id: string;
     email: string | null;
+    id: string;
   } | null;
 };
 
 export default function AccountForm({ user }: Props) {
-  const { profile, loading, updateProfile } = useProfile(user?.id);
+  const { loading, profile, updateProfile } = useProfile(user?.id);
 
   const [fullname, setFullname] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
@@ -41,7 +42,7 @@ export default function AccountForm({ user }: Props) {
     <div className='form-widget'>
       <div>
         <label htmlFor='email'>Email</label>
-        <input id='email' type='text' value={user?.email || ''} disabled />
+        <input disabled id='email' type='text' value={user?.email || ''} />
       </div>
 
       <div>
@@ -60,7 +61,7 @@ export default function AccountForm({ user }: Props) {
       </div>
 
       <div>
-        <button className='button primary block' onClick={handleUpdateProfile} disabled={loading}>
+        <button className='button primary block' disabled={loading} onClick={handleUpdateProfile}>
           {loading ? 'Loading ...' : 'Update'}
         </button>
       </div>

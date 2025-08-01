@@ -1,18 +1,19 @@
 'use client';
 
-import { mantineButtonTheme } from '@/styles/mantine/mantineButtonTheme';
 import { Button, ButtonProps, MantineProvider } from '@mantine/core';
 import Link from 'next/link';
 import { ComponentPropsWithoutRef } from 'react';
 
+import { mantineButtonTheme } from '@/styles/mantine/mantineButtonTheme';
+
 type CustomButtonProps = Omit<ButtonProps, 'component'> &
   ComponentPropsWithoutRef<'a'> & {
-    component: 'Link' | 'a';
     color?: 'primary' | 'secondary' | 'danger' | 'default';
+    component: 'Link' | 'a';
     href: string;
   };
 
-export const DefaultLinkButton = ({ href, component, target, ...rest }: CustomButtonProps) => {
+export const DefaultLinkButton = ({ component, href, target, ...rest }: CustomButtonProps) => {
   const safeRel = target === '_blank' ? 'noopener noreferrer' : undefined;
   return (
     <MantineProvider theme={mantineButtonTheme}>
@@ -29,8 +30,8 @@ export const DefaultLinkButton = ({ href, component, target, ...rest }: CustomBu
         <Button
           component='a'
           href={href}
-          target={target}
           rel={safeRel}
+          target={target}
           style={{
             transition: 'all 0.2s ease-in-out',
           }}

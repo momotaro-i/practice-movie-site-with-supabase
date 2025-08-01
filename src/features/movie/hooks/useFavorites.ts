@@ -3,9 +3,9 @@ import { useContext, useEffect, useState } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
 
+import { UserContext } from '@/components/auth/UserProvider';
 import { Links } from '@/configs/links';
 import { TMoviesInfoWithFavorites } from '@/types';
-import { UserContext } from 'app/ClientRoot';
 
 type Props = {
   data?: TMoviesInfoWithFavorites[];

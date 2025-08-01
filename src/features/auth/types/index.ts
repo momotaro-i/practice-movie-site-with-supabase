@@ -1,11 +1,11 @@
 export type TSignupFormValues = {
   email: string;
-  password: string;
   gender: string;
+  password: string;
 };
 
 export type TSignupRequestValues = {
   email: string;
-  password: string;
   gender: number;
+  password: string;
 };

@@ -1,7 +1,7 @@
 // utils/fetch/fetchJson.ts
 
 export async function fetchJson<T>(url: string, options: RequestInit = {}): Promise<T> {
-  const { method = 'GET', headers = {}, body, ...rest } = options;
+  const { body, headers = {}, method = 'GET', ...rest } = options;
 
   const init: RequestInit = {
     method,

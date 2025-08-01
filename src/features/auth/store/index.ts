@@ -1,6 +1,7 @@
-import { createSelectors } from '@/stores';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { createSelectors } from '@/stores';
 
 type TUser = {
   email: string;
@@ -9,11 +10,11 @@ type TUser = {
 
 type TAuthState = {
   isLoggedIn: boolean;
-  user: TUser | null;
   login: (user: TUser) => void;
   logout: () => void;
   rehydrated: boolean;
   setRehydrated: () => void;
+  user: TUser | null;
 };
 
 // セッションストレージを使った例

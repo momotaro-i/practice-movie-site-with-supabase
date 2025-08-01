@@ -8,11 +8,11 @@ import { createClient } from '@/utils/supabase/client';
 
 import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
 
+import { UserContext } from '@/components/auth/UserProvider';
 import { Links } from '@/configs/links';
 import { MovieCard } from '@/features/movie/components/MovieCard';
 import { useFavorites } from '@/features/movie/hooks/useFavorites';
 import { TItemWithFavoriteCount } from '@/types';
-import { UserContext } from 'app/ClientRoot';
 
 // TODO: お気に入りを消すたびに作品取得のAPIを叩くのは非効率
 const FavoritePage = () => {

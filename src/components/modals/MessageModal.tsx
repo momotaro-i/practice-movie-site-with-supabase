@@ -1,12 +1,12 @@
 import { Modal, Text } from '@mantine/core';
 type Props = {
-  opened: boolean;
   handleClose: () => void;
   message: string;
+  opened: boolean;
 };
-export const MessageModal = ({ opened, handleClose, message, ...props }: Props) => {
+export const MessageModal = ({ handleClose, message, opened, ...props }: Props) => {
   return (
-    <Modal {...props} opened={opened} onClose={handleClose} title={'メッセージ'} centered>
+    <Modal {...props} centered opened={opened} title='メッセージ' onClose={handleClose}>
       <Text>{message}</Text>
     </Modal>
   );

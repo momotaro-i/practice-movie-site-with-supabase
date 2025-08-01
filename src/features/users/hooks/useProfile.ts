@@ -1,5 +1,7 @@
-import { createClient } from '@/utils/supabase/client';
 import { useCallback, useEffect, useState } from 'react';
+
+import { createClient } from '@/utils/supabase/client';
+
 import { type Profile, type UpdateProfileData } from '../types';
 
 export const useProfile = (userId: string | undefined) => {
@@ -35,6 +37,7 @@ export const useProfile = (userId: string | undefined) => {
         });
       }
     } catch (error) {
+      console.error(error);
       alert('Error loading user data!');
     } finally {
       setLoading(false);
@@ -63,6 +66,7 @@ export const useProfile = (userId: string | undefined) => {
         // プロフィールを再取得
         await getProfile();
       } catch (error) {
+        console.error(error);
         alert('Error updating the data!');
       } finally {
         setLoading(false);

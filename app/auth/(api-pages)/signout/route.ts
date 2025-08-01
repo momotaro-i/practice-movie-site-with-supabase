@@ -1,7 +1,9 @@
-import { Links } from '@/configs/links';
-import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
+
+import { createClient } from '@/utils/supabase/server';
+
+import { Links } from '@/configs/links';
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();

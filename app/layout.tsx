@@ -1,13 +1,16 @@
 // app/layout.tsx
-import { notoSansJP, roboto } from '@/configs/fonts';
-import '@/styles/globals.scss';
-import { createClient } from '@/utils/supabase/server'; // cookies使うSupabaseラッパー
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
-import ClientRoot from 'app/ClientRoot';
 import { ReactNode } from 'react';
+
+import { createClient } from '@/utils/supabase/server'; // cookies使うSupabaseラッパー
+
+import '@/styles/globals.scss';
+
+import { notoSansJP, roboto } from '@/configs/fonts';
+import ClientRoot from 'app/ClientRoot';
 
 type Props = { children: ReactNode };
 
@@ -22,7 +25,7 @@ export default async function RootLayout({ children }: Props) {
       <head>
         <ColorSchemeScript defaultColorScheme='auto' />
       </head>
-      <body className={`${roboto.variable} ${notoSansJP.variable}`} suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${roboto.variable} ${notoSansJP.variable}`}>
         <ClientRoot user={user}>
           <Notifications />
           {children}

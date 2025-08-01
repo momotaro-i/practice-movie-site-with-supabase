@@ -1,12 +1,15 @@
 'use client';
 
-import { DefaultButton } from '@/components/buttons/DefaultButton';
-import { Links } from '@/configs/links';
-import { signup } from '@/features/auth/actions';
-import { showSuccessNotification } from '@/utils/notifications';
 import { Anchor, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
+
+import { showSuccessNotification } from '@/utils/notifications';
+
+import { DefaultButton } from '@/components/buttons/DefaultButton';
+
+import { Links } from '@/configs/links';
+import { signup } from '@/features/auth/actions';
 
 export const SignupForm = () => {
   const searchParams = useSearchParams();
@@ -19,33 +22,33 @@ export const SignupForm = () => {
   return (
     <form>
       <Stack gap='md' w={400}>
-        <Title order={2} ta='center' c='black'>
+        <Title c='black' order={2} ta='center'>
           新規登録
         </Title>
 
-        <TextInput label='メールアドレス' name='email' type='email' placeholder='your@email.com' required />
+        <TextInput required label='メールアドレス' name='email' placeholder='your@email.com' type='email' />
 
         <div>
-          <Text component='label' htmlFor='password' size='sm' c='black'>
+          <Text c='black' component='label' htmlFor='password' size='sm'>
             パスワード
           </Text>
-          <PasswordInput placeholder='パスワードを入力' id='password' name='password' required />
+          <PasswordInput required id='password' name='password' placeholder='パスワードを入力' />
         </div>
 
         <div>
-          <Text component='label' htmlFor='confirm-password' size='sm' c='black'>
+          <Text c='black' component='label' htmlFor='confirm-password' size='sm'>
             パスワード確認
           </Text>
-          <PasswordInput placeholder='パスワードを再入力' id='confirm-password' name='confirmPassword' required />
+          <PasswordInput required id='confirm-password' name='confirmPassword' placeholder='パスワードを再入力' />
         </div>
 
         <div>
-          <DefaultButton type='submit' formAction={signup} fullWidth color='primary'>
+          <DefaultButton fullWidth color='primary' formAction={signup} type='submit'>
             新規登録
           </DefaultButton>
 
-          <Group justify='center' mt={30} gap={0}>
-            <Text size='sm' c='black'>
+          <Group gap={0} justify='center' mt={30}>
+            <Text c='black' size='sm'>
               アカウントをお持ちの方は
             </Text>
             <Anchor href={Links.auth.signin} size='sm'>

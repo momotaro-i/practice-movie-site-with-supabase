@@ -18,12 +18,11 @@ export const useFavorites = ({ data }: Props) => {
   const [updateMoviesData, setUpdateMoviesData] = useState<TMoviesInfoWithFavorites[]>([]);
 
   useEffect(() => {
-    if (!user) return;
     if (!data) return;
 
-    // ログイン中のユーザーのお気に入り状況を取得
-    const fetchFavorites = async () => {
-      if (user) {
+    if (user) {
+      // ログイン中のユーザーのお気に入り状況を取得
+      const fetchFavorites = async () => {
         // user_idが一致するtitle_idを取得
         const { data: favorites } = await supabase.from('favorites').select('title_id').eq('user_id', user.id);
 
@@ -32,10 +31,10 @@ export const useFavorites = ({ data }: Props) => {
           const ids = favorites.map((favorite) => favorite.title_id);
           setFavoriteIds(new Set(ids));
         }
-      }
-    };
+      };
 
-    fetchFavorites();
+      fetchFavorites();
+    }
 
     setUpdateMoviesData(data ?? []);
   }, [user, supabase, data]);

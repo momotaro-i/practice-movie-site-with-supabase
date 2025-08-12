@@ -5,6 +5,8 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
 
+import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
+
 // UserContextを作成
 export const UserContext = createContext<User | null>(null);
 
@@ -40,7 +42,7 @@ export const UserProvider = ({ children }: Props) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <FullScreenLoader />;
   }
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;

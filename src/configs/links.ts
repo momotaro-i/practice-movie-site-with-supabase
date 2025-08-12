@@ -7,6 +7,9 @@ export const Links = {
   mypage: {
     favorite: '/mypage/favorite',
   },
+  admin: {
+    users: '/admin/users',
+  },
   home: '/',
-  error: '/error',
+  // error: '/error',
 };

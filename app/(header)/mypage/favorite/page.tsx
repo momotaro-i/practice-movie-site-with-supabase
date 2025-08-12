@@ -6,9 +6,9 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
 
+import { UserContext } from '@/components/auth/UserProvider';
 import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
 
-import { UserContext } from '@/components/auth/UserProvider';
 import { Links } from '@/configs/links';
 import { MovieCard } from '@/features/movie/components/MovieCard';
 import { useFavorites } from '@/features/movie/hooks/useFavorites';

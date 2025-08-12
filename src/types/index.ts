@@ -7,18 +7,18 @@ export type TUserFavorite = Database['public']['Tables']['favorites']['Row'];
 export type TItemsFavoriteCount = Database['public']['Views']['favorite_counts']['Row'];
 
 export type TResponse = {
-  id: number;
-  name: string;
   collections: (TCollection & {
     items: TItem[];
   })[];
+  id: number;
+  name: string;
 };
 
 // favorite_countを加えたデータ（画面やロジックで使用）
 export type TMoviesInfoWithFavorites = {
+  collections: TCollectionWithFavorites[];
   id: number;
   name: string;
-  collections: TCollectionWithFavorites[];
 };
 
 export type TCollectionWithFavorites = TCollection & {
@@ -27,4 +27,11 @@ export type TCollectionWithFavorites = TCollection & {
 
 export type TItemWithFavoriteCount = TItem & {
   favorite_count: number;
+};
+
+export type TUser = {
+  email: string;
+  id: string;
+  is_mail_confirmed: boolean;
+  role: string;
 };

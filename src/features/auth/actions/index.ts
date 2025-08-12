@@ -17,13 +17,14 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { data: signInData, error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
     console.error(error);
-
-    redirect(Links.error);
+    return;
+    // redirect(Links.error);
   }
+  console.log(signInData);
 
   revalidatePath('/', 'layout');
   redirect(Links.home);
@@ -42,9 +43,11 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    redirect(Links.error);
+    console.log(error);
+    return;
+    // redirect(Links.error);
   }
 
   revalidatePath('/', 'layout');
-  redirect(Links.auth.signup + '?send=true');
+  redirect(Links.auth.signin + '?send=true');
 }

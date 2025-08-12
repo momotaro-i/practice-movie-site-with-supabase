@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
 
+import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
+
 import { Links } from '@/configs/links';
 
 // TODO: 本番はnonceを使用する
@@ -14,10 +16,12 @@ const GoogleSignInButton = () => {
   const supabase = createClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   useEffect(() => {
     // Googleのコードが見つけられるように、グローバルスコープで利用可能である必要がある
     window.handleSignInWithGoogle = async (response: CredentialResponse) => {
+      setIsSigningIn(true);
       const { data, error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
         token: response.credential,
@@ -28,8 +32,10 @@ const GoogleSignInButton = () => {
         console.log('Logged in user:', data);
         router.push(Links.home); // ← ログイン後に遷移
       }
+      setIsSigningIn(false);
     };
   }, [supabase.auth, router]);
+
   return (
     <>
       <Script async src='https://accounts.google.com/gsi/client' onLoad={() => setIsLoading(false)} />
@@ -58,6 +64,8 @@ const GoogleSignInButton = () => {
         data-type='standard'
         data-width='400'
       ></div>
+      {/* サインイン処理中ローダー（別 state） */}
+      {isSigningIn && <FullScreenLoader />}
     </>
   );
 };

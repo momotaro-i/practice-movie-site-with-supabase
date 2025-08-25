@@ -44,6 +44,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       router.push(Links.auth.signin);
       return;
     }
+
     (async () => {
       const data: TUser[] | undefined = await run();
 

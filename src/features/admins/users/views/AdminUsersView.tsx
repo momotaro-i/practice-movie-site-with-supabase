@@ -39,7 +39,7 @@ export const AdminUsersView = () => {
   }, [run]);
 
   return (
-    <Box p={20}>
+    <Box>
       <Title order={2}>管理者ユーザー一覧</Title>
       <InviteForm updateData={updateData} />
       {isLoading ? <FullScreenLoader /> : <UserList updateData={updateData} users={filteredData} />}

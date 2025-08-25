@@ -94,7 +94,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </SNavLink>
         </SFooter>
       </SNavbar>
-      <SChildrenWrapper className='p-20'>{children}</SChildrenWrapper>
+      <SChildrenWrapper>{children}</SChildrenWrapper>
     </Flex>
   );
 }
@@ -170,6 +170,7 @@ export const SNavLink = styled.a`
 
 const SChildrenWrapper = styled.div`
   flex-grow: 1;
+  padding: 20px;
   p,
   h1,
   h2,

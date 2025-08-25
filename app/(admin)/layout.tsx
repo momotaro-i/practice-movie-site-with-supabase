@@ -3,7 +3,7 @@
 import { Flex, Title } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { FaExchangeAlt, FaListUl, FaSignOutAlt, FaUserFriends } from 'react-icons/fa';
+import { FaExchangeAlt, FaSignOutAlt } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { createClient } from '@/utils/supabase/client';
@@ -13,19 +13,12 @@ import { useAsync } from '@/hooks/useAsync';
 import { UserContext } from '@/components/auth/UserProvider';
 import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
 
-import { Links } from '@/configs/links';
+import { adminLinks, Links } from '@/configs/links';
 import { TUser } from '@/types';
-
-const data = [
-  { link: Links.admin.users, label: 'ユーザー管理', icon: FaUserFriends },
-  { link: Links.admin.themes, label: 'テーマ管理', icon: FaListUl },
-  { link: Links.admin.collections, label: 'サブテーマ管理', icon: FaListUl },
-  { link: Links.admin.items, label: '作品管理', icon: FaListUl },
-];
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
-  const [active, setActive] = useState('作品管理');
+  const [active, setActive] = useState('');
   const [display, setDisplay] = useState(false);
   // adminユーザー以外だったらリダイレクト
   const user = useContext(UserContext);
@@ -73,7 +66,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               管理者画面
             </Title>
           </SHeader>
-          {data.map((item) => (
+          {adminLinks.map((item) => (
             <SNavLink
               data-active={item.label === active || undefined}
               href={item.link}
@@ -176,6 +169,7 @@ export const SNavLink = styled.a`
 `;
 
 const SChildrenWrapper = styled.div`
+  flex-grow: 1;
   p,
   h1,
   h2,

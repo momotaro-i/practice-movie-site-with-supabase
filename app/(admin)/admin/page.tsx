@@ -1,5 +1,7 @@
+import { AdminIndexView } from '@/features/admins/components/AdminIndexView';
+
 const AdminIndex = () => {
-  return <div>AdminIndex</div>;
+  return <AdminIndexView />;
 };
 
 export default AdminIndex;

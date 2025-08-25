@@ -9,6 +9,9 @@ export const Links = {
   },
   admin: {
     users: '/admin/users',
+    themes: '/admin/themes',
+    collections: '/admin/collections',
+    items: '/admin/items',
   },
   home: '/',
   // error: '/error',

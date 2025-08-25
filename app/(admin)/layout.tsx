@@ -1,32 +1,68 @@
 'use client';
 
 import { Flex, Title } from '@mantine/core';
-import { useState } from 'react';
-import { FaExchangeAlt, FaSignOutAlt, FaUserFriends } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { FaExchangeAlt, FaListUl, FaSignOutAlt, FaUserFriends } from 'react-icons/fa';
 import styled from 'styled-components';
 
-import { Links } from '@/configs/links';
+import { createClient } from '@/utils/supabase/client';
 
-const data = [{ link: Links.admin.users, label: 'ユーザー管理', icon: FaUserFriends }];
+import { useAsync } from '@/hooks/useAsync';
+
+import { UserContext } from '@/components/auth/UserProvider';
+import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
+
+import { Links } from '@/configs/links';
+import { TUser } from '@/types';
+
+const data = [
+  { link: Links.admin.users, label: 'ユーザー管理', icon: FaUserFriends },
+  { link: Links.admin.themes, label: 'テーマ管理', icon: FaListUl },
+  { link: Links.admin.collections, label: 'サブテーマ管理', icon: FaListUl },
+  { link: Links.admin.items, label: '作品管理', icon: FaListUl },
+];
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [active, setActive] = useState('Billing');
+  const supabase = createClient();
+  const [active, setActive] = useState('作品管理');
+  const [display, setDisplay] = useState(false);
+  // adminユーザー以外だったらリダイレクト
+  const user = useContext(UserContext);
+  const router = useRouter();
 
-  const links = data.map((item) => (
-    <SNavLink
-      data-active={item.label === active || undefined}
-      href={item.link}
-      key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
-    >
-      <item.icon className='linkIcon' />
-      <span>{item.label}</span>
-    </SNavLink>
-  ));
+  const fetchUsers = useCallback(async () => {
+    const { data, error } = await supabase.from('users').select('*');
+    if (error) throw error;
+    return data;
+  }, [supabase]);
 
+  const { isLoading, run } = useAsync(fetchUsers);
+  useEffect(() => {
+    // ① ログインチェック
+    if (!user) {
+      router.push(Links.auth.signin);
+      return;
+    }
+    (async () => {
+      const data: TUser[] | undefined = await run();
+
+      // ② 管理者チェック
+      const currentUserInfo = data?.find((d) => d.id === user.id);
+      if (currentUserInfo) {
+        if (currentUserInfo.role !== 'admin') {
+          router.push(Links.home);
+          return;
+        } else {
+          setDisplay(true);
+        }
+      }
+    })();
+  }, [router, user, run]);
+
+  if (!display) {
+    return isLoading ? <FullScreenLoader /> : null;
+  }
   return (
     <Flex>
       <SNavbar>
@@ -36,7 +72,20 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               管理者画面
             </Title>
           </SHeader>
-          {links}
+          {data.map((item) => (
+            <SNavLink
+              data-active={item.label === active || undefined}
+              href={item.link}
+              key={item.label}
+              onClick={(event) => {
+                event.preventDefault();
+                setActive(item.label);
+              }}
+            >
+              <item.icon className='linkIcon' />
+              <span>{item.label}</span>
+            </SNavLink>
+          ))}
         </SNavbarMain>
 
         <SFooter>

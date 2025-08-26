@@ -7,14 +7,15 @@ import { DefaultButton } from '@/components/buttons/DefaultButton';
 type Props = {
   editValue: string;
   isOpen: boolean;
+  label: string;
   onChange: (value: string) => void;
   onClose: () => void;
   onEdit: () => void;
 };
-export const EditModal = ({ editValue, isOpen, onChange, onClose, onEdit }: Props) => {
+export const EditModal = ({ editValue, isOpen, label, onChange, onClose, onEdit }: Props) => {
   return (
-    <Modal opened={isOpen} title='テーマ編集' onClose={onClose}>
-      <TextInput autoFocus label='テーマ名' value={editValue} onChange={(e) => onChange(e.currentTarget.value)} />
+    <Modal opened={isOpen} title={`${label}編集`} onClose={onClose}>
+      <TextInput autoFocus label={`${label}名`} value={editValue} onChange={(e) => onChange(e.currentTarget.value)} />
       <Flex align='flex-start' gap='xs' mt={10}>
         <Text c='red' lh={1.5} size='xs' style={{ flexShrink: 0 }}>
           ⚠️:
@@ -28,7 +29,7 @@ export const EditModal = ({ editValue, isOpen, onChange, onClose, onEdit }: Prop
           キャンセル
         </DefaultButton>
         <DefaultButton color='primary' disabled={editValue === ''} onClick={onEdit}>
-          編集を実行
+          {`${label}を編集`}
         </DefaultButton>
       </Group>
     </Modal>

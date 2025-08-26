@@ -6,7 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 
-import { InsertModal } from '@/features/admins/themes/components/InsertModal';
+import { InsertModal } from '@/features/admins/components/InsertModal';
 import { ThemesTable } from '@/features/admins/themes/components/ThemesTable';
 import { useGetThemes } from '@/features/admins/themes/hooks/useGetThemes';
 
@@ -46,6 +46,7 @@ export const AdminThemesView = () => {
       <InsertModal
         insertValue={insertValue}
         isOpen={insertModalOpen}
+        label='テーマ'
         onChange={setInsertValue}
         onClose={() => setInsertModalOpen(false)}
         onInsert={handleInsertTheme}

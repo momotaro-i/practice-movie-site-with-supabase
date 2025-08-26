@@ -9,8 +9,8 @@ import { createClient } from '@/utils/supabase/client';
 
 import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
 
-import { DeleteModal } from '@/features/admins/themes/components/DeleteModal';
-import { EditModal } from '@/features/admins/themes/components/EditModal';
+import { DeleteModal } from '@/features/admins/components/DeleteModal';
+import { EditModal } from '@/features/admins/components/EditModal';
 import { TTheme } from '@/types';
 
 type Props = {
@@ -92,6 +92,7 @@ export const ThemesTable = ({ handleGetTheme, isLoading, themes }: Props) => {
       <EditModal
         editValue={editValue}
         isOpen={editModalOpen}
+        label='テーマ'
         onChange={setEditValue}
         onClose={() => setEditModalOpen(false)}
         onEdit={() => handleConfirmEdit(editValue)}
@@ -99,6 +100,7 @@ export const ThemesTable = ({ handleGetTheme, isLoading, themes }: Props) => {
       {/* 削除確認モーダル */}
       <DeleteModal
         isOpen={deleteModalOpen}
+        label='テーマ'
         selectedThemeName={selectedTheme?.name ?? ''}
         onClose={() => setDeleteModalOpen(false)}
         onDelete={handleConfirmDelete}

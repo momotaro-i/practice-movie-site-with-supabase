@@ -1,6 +1,7 @@
 'use client';
 
 import { Flex, Title } from '@mantine/core';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { FaExchangeAlt, FaSignOutAlt } from 'react-icons/fa';
@@ -71,8 +72,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               data-active={item.label === active || undefined}
               href={item.link}
               key={item.label}
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={() => {
                 setActive(item.label);
               }}
             >
@@ -126,7 +126,7 @@ export const SFooter = styled.div`
   border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 `;
 
-export const SNavLink = styled.a`
+export const SNavLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;

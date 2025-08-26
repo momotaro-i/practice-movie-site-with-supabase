@@ -6,32 +6,32 @@ import { createClient } from '@/utils/supabase/client';
 
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 
-import { InsertModal } from '@/features/admins/themes/components/InsertModal';
-import { ThemesTable } from '@/features/admins/themes/components/ThemesTable';
-import { useGetThemes } from '@/features/admins/themes/hooks/useGetThemes';
+import { InsertModal } from '@/features/admins/subThemes/components/InsertModal';
+import { SubThemesTable } from '@/features/admins/subThemes/components/SubThemesTable';
+import { useGetSubThemes } from '@/features/admins/subThemes/hooks/useGetSubThemes';
 
-export const AdminThemesView = () => {
+export const AdminSubThemesView = () => {
   const supabase = createClient();
   const [insertModalOpen, setInsertModalOpen] = useState(false);
   const [insertValue, setInsertValue] = useState('');
-  const { handleGetTheme, isLoading, themes } = useGetThemes();
+  const { handleGetSubThemes, isLoading, subThemes } = useGetSubThemes();
 
-  const handleInsertTheme = async () => {
-    const { error } = await supabase.from('themes').insert({ name: insertValue });
+  const handleInsertTheme = async (themeId: number, description: string) => {
+    const { error } = await supabase.from('collections').insert({ title: insertValue, theme_id: themeId, description });
     if (error) throw error;
     setInsertModalOpen(false);
     setInsertValue('');
-    handleGetTheme();
+    handleGetSubThemes();
   };
 
   useEffect(() => {
-    handleGetTheme();
-  }, [handleGetTheme]);
+    handleGetSubThemes();
+  }, [handleGetSubThemes]);
 
   return (
     <div>
       <Group justify='space-between' mb='md'>
-        <Title order={2}>テーマ管理</Title>
+        <Title order={2}>サブテーマ管理</Title>
         <DefaultButton
           color='primary'
           onClick={() => {
@@ -39,14 +39,13 @@ export const AdminThemesView = () => {
             setInsertValue('');
           }}
         >
-          テーマを追加
+          サブテーマを追加
         </DefaultButton>
       </Group>
-      <ThemesTable handleGetTheme={handleGetTheme} isLoading={isLoading} themes={themes} />
+      <SubThemesTable handleGetSubThemes={handleGetSubThemes} isLoading={isLoading} subThemes={subThemes} />
       <InsertModal
         insertValue={insertValue}
         isOpen={insertModalOpen}
-        label='テーマ'
         onChange={setInsertValue}
         onClose={() => setInsertModalOpen(false)}
         onInsert={handleInsertTheme}

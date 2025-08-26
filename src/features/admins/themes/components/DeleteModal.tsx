@@ -4,21 +4,20 @@ import { DefaultButton } from '@/components/buttons/DefaultButton';
 
 type Props = {
   isOpen: boolean;
-  label: string;
   onClose: () => void;
   onDelete: () => void;
   selectedThemeName: string;
 };
-export const DeleteModal = ({ isOpen, label, onClose, onDelete, selectedThemeName }: Props) => {
+export const DeleteModal = ({ isOpen, onClose, onDelete, selectedThemeName }: Props) => {
   return (
-    <Modal opened={isOpen} title={`${label}の削除`} onClose={onClose}>
+    <Modal opened={isOpen} title='テーマの削除' onClose={onClose}>
       <Text c='black'>「{selectedThemeName}」を削除しますか？</Text>
       <Flex align='flex-start' gap='xs' mt={10}>
         <Text c='red' lh={1.5} size='xs' style={{ flexShrink: 0 }}>
           ⚠️:
         </Text>
         <Text c='red' lh={1.5} size='xs'>
-          この{label}が現在公開されている場合、削除により公開状況に重大な影響が出る可能性があります。
+          このテーマが現在公開されている場合、削除により公開状況に重大な影響が出る可能性があります。
           <br />
           この操作は取り消すことができません。
         </Text>

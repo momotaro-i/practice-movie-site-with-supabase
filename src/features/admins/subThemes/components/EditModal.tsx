@@ -1,21 +1,48 @@
 'use client';
 
-import { Flex, Group, Modal, Text, TextInput } from '@mantine/core';
+import { Flex, Group, Modal, Text, Textarea, TextInput } from '@mantine/core';
 
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 
 type Props = {
+  editDescription: string;
   editValue: string;
   isOpen: boolean;
-  label: string;
   onChange: (value: string) => void;
+  onChangeDescription: (value: string) => void;
   onClose: () => void;
   onEdit: () => void;
+  themeName: string;
 };
-export const EditModal = ({ editValue, isOpen, label, onChange, onClose, onEdit }: Props) => {
+export const EditModal = ({
+  editDescription,
+  editValue,
+  isOpen,
+  onChange,
+  onChangeDescription,
+  onClose,
+  onEdit,
+  themeName,
+}: Props) => {
   return (
-    <Modal opened={isOpen} title={`${label}編集`} onClose={onClose}>
-      <TextInput autoFocus label={`${label}名`} value={editValue} onChange={(e) => onChange(e.currentTarget.value)} />
+    <Modal opened={isOpen} title='サブテーマ編集' onClose={onClose}>
+      <Text c='black' fw={500} size='sm'>
+        テーマ名: {themeName}
+      </Text>
+      <TextInput
+        autoFocus
+        label='サブテーマ名'
+        mt={5}
+        value={editValue}
+        onChange={(e) => onChange(e.currentTarget.value)}
+      />
+      <Textarea
+        autoFocus
+        label='説明テキスト'
+        mt={5}
+        value={editDescription}
+        onChange={(e) => onChangeDescription(e.currentTarget.value)}
+      />
       <Flex align='flex-start' gap='xs' mt={10}>
         <Text c='red' lh={1.5} size='xs' style={{ flexShrink: 0 }}>
           ⚠️:
@@ -29,7 +56,7 @@ export const EditModal = ({ editValue, isOpen, label, onChange, onClose, onEdit 
           キャンセル
         </DefaultButton>
         <DefaultButton color='primary' disabled={editValue === ''} onClick={onEdit}>
-          {`${label}を編集`}
+          テーマを編集
         </DefaultButton>
       </Group>
     </Modal>

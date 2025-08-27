@@ -12,13 +12,15 @@ export type TAdminItem = TItem & {
 };
 
 export type RowData = {
+  category: string;
+  collection_id: number;
   copyright: string;
   description: string;
-  id: string;
+  id: number;
   image_url: string;
   platform: string;
   platform_url: string;
-  subTheme: string;
+  sub_theme: string;
   theme: string;
   title: string;
 };

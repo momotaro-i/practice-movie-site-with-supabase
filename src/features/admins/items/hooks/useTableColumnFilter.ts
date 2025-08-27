@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { tableColumns } from '@/features/admins/items/components/ItemsTable';
+import { tableColumns } from '@/features/admins/items/configs';
 
 export const useTableColumnFilter = () => {
   // 表示するデータを絞り込む

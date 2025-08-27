@@ -1,143 +1,267 @@
 'use client';
 
-import { Table, TextInput } from '@mantine/core';
-import { useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { ActionIcon, Box, Group, Image, MultiSelect } from '@mantine/core';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useMemo, useState } from 'react';
+import { FaSearch, FaTrashAlt } from 'react-icons/fa';
+import { FaPencil } from 'react-icons/fa6';
 
 import { createClient } from '@/utils/supabase/client';
 
-import { FullScreenLoader } from '@/components/ui/FullScreenLoader';
-
-import { ItemsTableBody } from '@/features/admins/items/components/ItemsTableBody';
-import { ItemsTableHeader } from '@/features/admins/items/components/ItemsTableHeader';
 import { TableColumnFilter } from '@/features/admins/items/components/TableColumnFilter';
 import { useTableColumnFilter } from '@/features/admins/items/hooks/useTableColumnFilter';
-import { TAdminItem } from '@/features/admins/items/types';
-import { DeleteModal } from '@/features/admins/subThemes/components/DeleteModal';
-import { EditModal } from '@/features/admins/subThemes/components/EditModal';
-import { TSubTheme } from '@/features/admins/subThemes/types';
+import { RowData, TAdminItem } from '@/features/admins/items/types';
 
 type Props = {
-  handleGetItems: () => void;
-  isLoading: boolean;
   items: TAdminItem[];
 };
+export const ItemsTable = ({ items }: Props) => {
+  const initialRecords = useMemo(
+    () =>
+      items.map((item) => {
+        const { sub_theme, ...rest } = item;
+        return {
+          ...rest,
+          sub_theme: sub_theme.title,
+          theme: sub_theme.theme.name,
+        };
+      }),
+    [items]
+  );
 
-export const tableColumns = [
-  { label: 'ID', value: 'id' },
-  { label: 'サムネイル', value: 'image' },
-  { label: 'テーマ', value: 'theme' },
-  { label: 'サブテーマ', value: 'sub_theme' },
-  { label: 'タイトル', value: 'title' },
-  { label: '詳細テキスト', value: 'description' },
-  { label: 'コピーライト', value: 'copyright' },
-  { label: 'プラットフォーム', value: 'platform' },
-  { label: 'URL', value: 'platform_url' },
-];
-export const ItemsTable = ({ handleGetItems, isLoading, items }: Props) => {
+  const [records, setRecords] = useState<RowData[]>([]);
+  const [allThemes, setAllThemes] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [allSubThemes, setAllSubThemes] = useState<string[]>([]);
+  const [selectedSubThemes, setSelectedSubThemes] = useState<string[]>([]);
+  const [allTitles, setAllTitles] = useState<string[]>([]);
+  const [selectedTitles, setSelectedTitles] = useState<string[]>([]);
+  const [allCategories, setAllCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const supabase = createClient();
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<TSubTheme | null>(null);
-  const [editValue, setEditValue] = useState('');
-  const [editDescription, setEditDescription] = useState('');
 
-  // 編集モーダルを開く
-  const handleEditTheme = () => {
-    // setSelectedTheme(theme);
-    // setEditModalOpen(true);
-    // setEditValue(theme.title);
-    // setEditDescription(theme.description);
-  };
+  useEffect(() => {
+    setRecords(initialRecords);
 
-  // 削除モーダルを開く
-  const handleDeleteTheme = () => {
-    // setSelectedTheme(theme);
-    // setDeleteModalOpen(true);
-  };
+    // 各フィールドの一意な値を取得
+    const uniqueTitles = [...new Set(initialRecords.map((record) => record.title))];
+    const uniqueCategories = [...new Set(initialRecords.map((record) => record.category))];
+    const uniquePlatforms = [...new Set(initialRecords.map((record) => record.platform))];
 
-  //  編集処理の実装
-  const handleConfirmEdit = async (value: string, description: string) => {
-    const { error } = await supabase
-      .from('collections')
-      .update({ title: value, description })
-      .eq('id', selectedTheme?.id);
-    if (error) throw error;
-    handleGetItems();
-    setEditModalOpen(false);
-    setSelectedTheme(null);
-    setEditValue('');
-    setEditDescription('');
-  };
+    setAllTitles(uniqueTitles);
+    setAllCategories(uniqueCategories);
+    setAllPlatforms(uniquePlatforms);
 
-  // 削除処理の実装
-  const handleConfirmDelete = async () => {
-    const { error } = await supabase.from('collections').delete().eq('id', selectedTheme?.id);
-    if (error) throw error;
-    handleGetItems();
-    setDeleteModalOpen(false);
-    setSelectedTheme(null);
-  };
+    // テーマ一覧を取得
+    (async () => {
+      const [themes, subThemes] = await Promise.all([
+        supabase.from('themes').select('name'),
+        supabase.from('collections').select('title'),
+      ]);
+      setAllThemes(themes.data?.map((theme) => theme.name) || []);
+      setAllSubThemes(subThemes.data?.map((subTheme) => subTheme.title) || []);
+    })();
+  }, [initialRecords, supabase]);
+
+  useEffect(() => {
+    setRecords(
+      initialRecords.filter(({ category, platform, sub_theme, theme, title }) => {
+        if (selectedThemes.length && !selectedThemes.some((d) => d === theme)) return false;
+        if (selectedSubThemes.length && !selectedSubThemes.some((d) => d === sub_theme)) return false;
+        if (selectedTitles.length && !selectedTitles.some((d) => d === title)) return false;
+        if (selectedCategories.length && !selectedCategories.some((d) => d === category)) return false;
+        if (selectedPlatforms.length && !selectedPlatforms.some((d) => d === platform)) return false;
+
+        return true;
+      })
+    );
+  }, [selectedThemes, selectedSubThemes, selectedTitles, selectedCategories, selectedPlatforms, initialRecords]);
 
   // 表示するデータを絞り込む
   const { handleColumnChange, selectedColumns } = useTableColumnFilter();
 
-  // 絞り込み機能
-  const [searchValue, setSearchValue] = useState('');
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearchValue(value);
-    filterData(items, value);
-  };
-
-  const filterData = (data: TAdminItem[], search: string) => {
-    const query = search.toLowerCase().trim();
-
-    console.log(query);
-  };
-
-  if (isLoading) return <FullScreenLoader />;
-
   return (
     <>
       <TableColumnFilter defaultSelectedColumns={selectedColumns} handleColumnChange={handleColumnChange} />
-      <TextInput
-        leftSection={<FaSearch size={16} />}
+
+      <DataTable
+        pinLastColumn
+        withTableBorder
+        height='calc(100vh - 180px)'
         mt={20}
-        placeholder='Search by any field'
-        value={searchValue}
-        onChange={handleSearchChange}
-      />
-      <Table.ScrollContainer maxHeight='calc(100vh - 120px)' minWidth={500} mt={20}>
-        <Table stickyHeader>
-          <ItemsTableHeader selectedColumns={selectedColumns} />
-          <ItemsTableBody
-            handleDeleteTheme={handleDeleteTheme}
-            handleEditTheme={handleEditTheme}
-            items={items}
-            selectedColumns={selectedColumns}
-          />
-        </Table>
-      </Table.ScrollContainer>
-      {/* 編集確認モーダル */}
-      <EditModal
-        editDescription={editDescription}
-        editValue={editValue}
-        isOpen={editModalOpen}
-        themeName={selectedTheme?.theme.name ?? ''}
-        onChange={setEditValue}
-        onChangeDescription={setEditDescription}
-        onClose={() => setEditModalOpen(false)}
-        onEdit={() => handleConfirmEdit(editValue, editDescription)}
-      />
-      {/* 削除確認モーダル */}
-      <DeleteModal
-        isOpen={deleteModalOpen}
-        selectedSubThemeName={selectedTheme?.title ?? ''}
-        themeName={selectedTheme?.theme.name ?? ''}
-        onClose={() => setDeleteModalOpen(false)}
-        onDelete={handleConfirmDelete}
+        records={records}
+        columns={[
+          {
+            accessor: 'id',
+            render: ({ id }) => `${id}`,
+            hidden: !selectedColumns.includes('id'),
+          },
+          {
+            accessor: 'image_url',
+            title: 'サムネイル',
+            width: 150,
+            render: ({ image_url, title }) => <Image alt={title} height='auto' src={image_url} width='150px' />,
+            hidden: !selectedColumns.includes('image_url'),
+          },
+          {
+            title: 'タイトル',
+            accessor: 'title',
+            render: ({ title }) => `${title}`,
+            hidden: !selectedColumns.includes('title'),
+            filter: (
+              <MultiSelect
+                clearable
+                searchable
+                comboboxProps={{ withinPortal: false }}
+                data={allTitles}
+                label='タイトル'
+                leftSection={<FaSearch size={16} />}
+                value={selectedTitles}
+                styles={{
+                  wrapper: {
+                    width: '300px',
+                  },
+                }}
+                onChange={setSelectedTitles}
+              />
+            ),
+            filtering: selectedTitles.length > 0,
+          },
+          {
+            title: 'テーマ',
+            accessor: 'theme',
+            render: ({ theme }) => `${theme}`,
+            hidden: !selectedColumns.includes('theme'),
+            filter: (
+              <MultiSelect
+                clearable
+                searchable
+                comboboxProps={{ withinPortal: false }}
+                data={allThemes}
+                label='テーマ'
+                leftSection={<FaSearch size={16} />}
+                value={selectedThemes}
+                styles={{
+                  wrapper: {
+                    width: '300px',
+                  },
+                }}
+                onChange={setSelectedThemes}
+              />
+            ),
+            filtering: selectedThemes.length > 0,
+          },
+          {
+            title: 'サブテーマ',
+            accessor: 'sub_theme',
+            render: ({ sub_theme }) => `${sub_theme}`,
+            hidden: !selectedColumns.includes('sub_theme'),
+            filter: (
+              <MultiSelect
+                clearable
+                searchable
+                comboboxProps={{ withinPortal: false }}
+                data={allSubThemes}
+                label='サブテーマ'
+                leftSection={<FaSearch size={16} />}
+                value={selectedSubThemes}
+                styles={{
+                  wrapper: {
+                    width: '300px',
+                  },
+                }}
+                onChange={setSelectedSubThemes}
+              />
+            ),
+            filtering: selectedSubThemes.length > 0,
+          },
+
+          {
+            title: 'カテゴリ',
+            accessor: 'category',
+            render: ({ category }) => `${category}`,
+            hidden: !selectedColumns.includes('category'),
+            filter: (
+              <MultiSelect
+                clearable
+                searchable
+                comboboxProps={{ withinPortal: false }}
+                data={allCategories}
+                label='カテゴリ'
+                leftSection={<FaSearch size={16} />}
+                value={selectedCategories}
+                styles={{
+                  wrapper: {
+                    width: '300px',
+                  },
+                }}
+                onChange={setSelectedCategories}
+              />
+            ),
+            filtering: selectedCategories.length > 0,
+          },
+          {
+            title: '作品詳細テキスト',
+            accessor: 'description',
+            render: ({ description }) => `${description}`,
+            hidden: !selectedColumns.includes('description'),
+          },
+          {
+            title: 'コピーライト',
+            accessor: 'copyright',
+            render: ({ copyright }) => `${copyright}`,
+            hidden: !selectedColumns.includes('copyright'),
+          },
+          {
+            title: 'プラットフォーム',
+            accessor: 'platform',
+            render: ({ platform }) => `${platform}`,
+            hidden: !selectedColumns.includes('platform'),
+            filter: (
+              <MultiSelect
+                clearable
+                searchable
+                comboboxProps={{ withinPortal: false }}
+                data={allPlatforms}
+                label='プラットフォーム'
+                leftSection={<FaSearch size={16} />}
+                value={selectedPlatforms}
+                styles={{
+                  wrapper: {
+                    width: '300px',
+                  },
+                }}
+                onChange={setSelectedPlatforms}
+              />
+            ),
+            filtering: selectedPlatforms.length > 0,
+          },
+          {
+            title: 'URL',
+            accessor: 'platform_url',
+            render: ({ platform_url }) => `${platform_url}`,
+            hidden: !selectedColumns.includes('platform_url'),
+          },
+          {
+            accessor: 'actions',
+            title: <Box>操作</Box>,
+            width: '0%',
+            cellsStyle: () => ({ backgroundColor: 'white' }),
+            render: () => (
+              <Group gap={4} wrap='nowrap'>
+                <ActionIcon aria-label='編集' c='gray' variant='subtle'>
+                  <FaPencil />
+                </ActionIcon>
+                <ActionIcon aria-label='削除' color='gray' variant='subtle'>
+                  <FaTrashAlt />
+                </ActionIcon>
+              </Group>
+            ),
+          },
+        ]}
       />
     </>
   );

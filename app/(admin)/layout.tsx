@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, Title } from '@mantine/core';
+import { Flex, ScrollArea, Title } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -94,7 +94,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </SNavLink>
         </SFooter>
       </SNavbar>
-      <SChildrenWrapper>{children}</SChildrenWrapper>
+      <ScrollArea h='100vh' style={{ flexGrow: 1 }} type='auto' w='calc(100vw - 200px)'>
+        <SChildrenWrapper>{children}</SChildrenWrapper>
+      </ScrollArea>
     </Flex>
   );
 }
@@ -103,7 +105,8 @@ export default AdminLayout;
 
 export const SNavbar = styled.nav`
   height: 100vh;
-  width: 300px;
+  width: 200px;
+  flex-shrink: 0;
   padding: var(--mantine-spacing-md);
   display: flex;
   flex-direction: column;
@@ -169,7 +172,6 @@ export const SNavLink = styled(Link)`
 `;
 
 const SChildrenWrapper = styled.div`
-  flex-grow: 1;
   padding: 20px;
   p,
   h1,

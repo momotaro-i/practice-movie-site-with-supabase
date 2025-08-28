@@ -11,7 +11,7 @@ export type TAdminItem = TItem & {
   };
 };
 
-export type RowData = {
+export type TRowData = {
   category: string;
   collection_id: number;
   copyright: string;

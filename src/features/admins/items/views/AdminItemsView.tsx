@@ -37,7 +37,7 @@ export const AdminItemsView = () => {
           作品を追加
         </DefaultButton> */}
       </Group>
-      <ItemsTable items={items} />
+      <ItemsTable isLoading={isLoading} items={items} />
     </div>
   );
 };

@@ -1,64 +1,73 @@
 'use client';
 
-import { Flex, Group, Modal, Text, Textarea, TextInput } from '@mantine/core';
+import { Flex, Group, Modal, Select, Text, TextInput } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
 
+import { FileDropzone } from '@/components/FileDropzone';
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 
+import { platforms } from '@/features/admins/configs';
+import { TRowData } from '@/features/admins/items/types';
+import { TSubTheme } from '@/features/admins/subThemes/types';
+
 type Props = {
-  editDescription: string;
-  editValue: string;
+  form: UseFormReturnType<TRowData, (values: TRowData) => TRowData>;
   isOpen: boolean;
-  onChange: (value: string) => void;
-  onChangeDescription: (value: string) => void;
   onClose: () => void;
-  onEdit: () => void;
-  themeName: string;
+  onEdit: (values: TRowData) => Promise<void>;
+  subThemes: TSubTheme[];
 };
-export const EditModal = ({
-  editDescription,
-  editValue,
-  isOpen,
-  onChange,
-  onChangeDescription,
-  onClose,
-  onEdit,
-  themeName,
-}: Props) => {
+export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes }: Props) => {
+  // サブテーマを変更したらテーマも変更する
+  form.watch('sub_theme', ({ value }) => {
+    const theme = subThemes.find((item) => item.title === value)?.theme.name;
+    if (theme) {
+      form.setFieldValue('theme', theme);
+    }
+  });
+
   return (
-    <Modal opened={isOpen} title='サブテーマ編集' onClose={onClose}>
-      <Text c='black' fw={500} size='sm'>
-        テーマ名: {themeName}
-      </Text>
-      <TextInput
-        autoFocus
-        label='サブテーマ名'
-        mt={5}
-        value={editValue}
-        onChange={(e) => onChange(e.currentTarget.value)}
-      />
-      <Textarea
-        autoFocus
-        label='説明テキスト'
-        mt={5}
-        value={editDescription}
-        onChange={(e) => onChangeDescription(e.currentTarget.value)}
-      />
-      <Flex align='flex-start' gap='xs' mt={10}>
-        <Text c='red' lh={1.5} size='xs' style={{ flexShrink: 0 }}>
-          ⚠️:
-        </Text>
-        <Text c='red' lh={1.5} size='xs'>
-          このテーマが現在公開されている場合、変更により公開状況に影響が出る可能性があります。
-        </Text>
-      </Flex>
-      <Group justify='flex-end' mt='md'>
-        <DefaultButton color='primary' variant='subtle' onClick={onClose}>
-          キャンセル
-        </DefaultButton>
-        <DefaultButton color='primary' disabled={editValue === ''} onClick={onEdit}>
-          テーマを編集
-        </DefaultButton>
-      </Group>
+    <Modal opened={isOpen} size='xl' title='サブテーマ編集' onClose={onClose}>
+      <form onSubmit={form.onSubmit(onEdit)}>
+        <Flex direction='column' gap={20}>
+          <TextInput autoFocus label='タイトル' {...form.getInputProps('title')} />
+
+          <TextInput autoFocus label='テーマ' {...form.getInputProps('theme')} disabled />
+
+          <Select
+            data={subThemes.map((subTheme) => subTheme.title) ?? []}
+            label='サブテーマ'
+            {...form.getInputProps('sub_theme')}
+          />
+
+          <TextInput autoFocus label='カテゴリ' {...form.getInputProps('category')} />
+          <Select
+            data={platforms.map((platform) => platform.name)}
+            label='プラットフォーム'
+            {...form.getInputProps('platform')}
+            value={form.getInputProps('platform').value}
+            onChange={(e) => {
+              form.getInputProps('platform').onChange(e);
+              form.setFieldValue('platform_url', platforms.find((item) => item.name === e)?.url || '');
+            }}
+          />
+          <TextInput autoFocus label='プラットフォームURL' {...form.getInputProps('platform_url')} />
+          <div>
+            <Text c='black' fw={500} fz='sm'>
+              サムネイル
+            </Text>
+            <FileDropzone imageUrl={form.getInputProps('image_url').value} />
+          </div>
+        </Flex>
+        <Group justify='flex-end' mt='md'>
+          <DefaultButton color='primary' variant='subtle' onClick={onClose}>
+            キャンセル
+          </DefaultButton>
+          <DefaultButton color='primary' type='submit'>
+            テーマを編集
+          </DefaultButton>
+        </Group>
+      </form>
     </Modal>
   );
 };

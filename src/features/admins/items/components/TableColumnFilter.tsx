@@ -2,7 +2,7 @@
 
 import { Checkbox, Group } from '@mantine/core';
 
-import { tableColumns } from '@/features/admins/items/configs';
+import { tableColumns } from '@/features/admins/configs';
 
 type Props = {
   defaultSelectedColumns: string[];

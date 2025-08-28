@@ -11,3 +11,22 @@ export const tableColumns = [
   { label: 'プラットフォーム', value: 'platform' },
   { label: 'URL', value: 'platform_url' },
 ];
+
+export const platforms = [
+  {
+    name: 'u-next',
+    url: 'https://www.unext.jp/',
+  },
+  {
+    name: 'AmazonPrime',
+    url: 'https://www.amazon.co.jp/Amazon-Prime-Video/b?ie=UTF8&node=4642043',
+  },
+  {
+    name: 'Netflix',
+    url: 'https://www.netflix.com/jp/',
+  },
+  {
+    name: 'Hulu',
+    url: 'https://www.hulu.jp/',
+  },
+];

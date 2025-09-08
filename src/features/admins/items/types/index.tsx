@@ -1,6 +1,10 @@
 import { TItem } from '@/types';
 
 export type TAdminItem = TItem & {
+  categories: {
+    id: number;
+    name: string;
+  }[];
   sub_theme: {
     id: number;
     theme: {

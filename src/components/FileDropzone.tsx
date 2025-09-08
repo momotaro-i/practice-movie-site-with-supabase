@@ -1,16 +1,15 @@
 import { ActionIcon, Box, Group, Image, Text } from '@mantine/core';
-import { Dropzone, DropzoneProps, MIME_TYPES } from '@mantine/dropzone';
+import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useState } from 'react';
 import { MdInsertPhoto, MdOutlineUploadFile } from 'react-icons/md';
 
 import { IconClose } from '@/components/icons/IconClose';
 
 type Props = {
-  imageUrl?: string;
-} & Partial<DropzoneProps>;
-export const FileDropzone = ({ imageUrl, ...props }: Props) => {
+  onFileSelected: (file: File | null) => void;
+};
+export const FileDropzone = ({ onFileSelected, ...props }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
-  const [defaultImageUrl, setDefaultImageUrl] = useState<string | undefined>(imageUrl);
 
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file);
@@ -26,10 +25,15 @@ export const FileDropzone = ({ imageUrl, ...props }: Props) => {
     );
   });
 
-  const handleReject = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
+  const handleDrop = (dropped: File[]) => {
+    const f = dropped[0] || null;
+    setFiles(dropped);
+    onFileSelected?.(f);
+  };
+
+  const handleReject = () => {
     setFiles([]);
-    setDefaultImageUrl(undefined);
+    onFileSelected?.(null);
   };
 
   return (
@@ -37,11 +41,8 @@ export const FileDropzone = ({ imageUrl, ...props }: Props) => {
       <Dropzone
         accept={[MIME_TYPES.png, MIME_TYPES.jpeg]}
         maxFiles={1}
-        maxSize={5 * 1024 ** 2}
-        mt={4}
-        multiple={false}
-        onDrop={(files) => setFiles(files)}
-        onReject={() => setFiles([])}
+        onDrop={handleDrop}
+        onReject={handleReject}
         {...props}
       >
         <Group justify='center' mih={220} pos='relative'>
@@ -51,13 +52,15 @@ export const FileDropzone = ({ imageUrl, ...props }: Props) => {
               <CloseButton handleReject={handleReject} />
               <Box h={220}>{previews}</Box>
             </div>
-          ) : defaultImageUrl ? (
-            // デフォルトの imageUrl がある場合はこちらを表示
-            <Box>
-              <CloseButton handleReject={handleReject} />
-              <Image alt='既存画像' h='220px' src={imageUrl} w='auto' />
-            </Box>
           ) : (
+            // defaultImageUrl ? (
+            //   // デフォルトの imageUrl がある場合はこちらを表示
+            //   <Box>
+            //     <CloseButton handleReject={handleReject} />
+            //     <Image alt='既存画像' h='220px' src={imageUrl} w='auto' />
+            //   </Box>
+            //  ) :
+
             <Group gap='xl' justify='center' style={{ pointerEvents: 'none' }}>
               <Dropzone.Accept>
                 <MdOutlineUploadFile color='var(--mantine-color-blue-6)' size={52} />

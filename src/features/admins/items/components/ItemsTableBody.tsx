@@ -44,6 +44,7 @@ export const ItemsTableBody = ({ handleDeleteTheme, handleEditTheme, items, sele
               <Text fz='sm'>{item.description}</Text>
             </Table.Td>
           )}
+
           {selectedColumns.includes('copyright') && (
             <Table.Td w={200}>
               <Text fz='sm'>{item.copyright}</Text>

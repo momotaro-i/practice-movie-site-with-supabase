@@ -13,19 +13,22 @@ import { TableColumnFilter } from '@/features/admins/items/components/TableColum
 import { useEditModal } from '@/features/admins/items/hooks/useEditModal';
 import { useTableColumnFilter } from '@/features/admins/items/hooks/useTableColumnFilter';
 import { TAdminItem, TRowData } from '@/features/admins/items/types';
-import { TSubTheme } from '@/features/admins/subThemes/types';
+import { TCollection, TTheme } from '@/types';
 
 type Props = {
   isLoading: boolean;
   items: TAdminItem[];
+  subThemes: TCollection[];
+  themes: TTheme[];
 };
-export const ItemsTable = ({ isLoading, items }: Props) => {
+export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
   const initialRecords = useMemo(
     () =>
       items.map((item) => {
-        const { sub_theme, ...rest } = item;
+        const { categories, sub_theme, ...rest } = item;
         return {
           ...rest,
+          category: categories[0]?.name ?? '',
           sub_theme: sub_theme.title,
           theme: sub_theme.theme.name,
         };
@@ -34,9 +37,7 @@ export const ItemsTable = ({ isLoading, items }: Props) => {
   );
 
   const [records, setRecords] = useState<TRowData[]>([]);
-  const [allThemes, setAllThemes] = useState<string[]>([]);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [subThemes, setSubThemes] = useState<TSubTheme[]>([]);
   const [selectedSubThemes, setSelectedSubThemes] = useState<string[]>([]);
   const [allTitles, setAllTitles] = useState<string[]>([]);
   const [selectedTitles, setSelectedTitles] = useState<string[]>([]);
@@ -58,21 +59,6 @@ export const ItemsTable = ({ isLoading, items }: Props) => {
     setAllTitles(uniqueTitles);
     setAllCategories(uniqueCategories);
     setAllPlatforms(uniquePlatforms);
-
-    // テーマ一覧を取得
-    (async () => {
-      const [themes, subThemes] = await Promise.all([
-        supabase.from('themes').select('name'),
-        supabase.from('collections').select(
-          `
-          id, title, description, is_active,
-          theme:themes ( id, name )
-        `
-        ),
-      ]);
-      setAllThemes(themes.data?.map((theme) => theme.name) || []);
-      setSubThemes((subThemes.data as unknown as TSubTheme[]) || []);
-    })();
   }, [initialRecords, supabase]);
 
   useEffect(() => {
@@ -157,7 +143,7 @@ export const ItemsTable = ({ isLoading, items }: Props) => {
                     clearable
                     searchable
                     comboboxProps={{ withinPortal: false }}
-                    data={allThemes}
+                    data={themes.map((theme) => theme.name) || []}
                     label='テーマ'
                     leftSection={<FaSearch size={16} />}
                     value={selectedThemes}
@@ -288,6 +274,7 @@ export const ItemsTable = ({ isLoading, items }: Props) => {
             form={editForm}
             isOpen={isOpen}
             subThemes={subThemes}
+            themes={themes}
             onClose={() => handleModalToggle(false)}
             onEdit={handleEdit}
           />

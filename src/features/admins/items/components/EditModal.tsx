@@ -3,24 +3,24 @@
 import { Flex, Group, Modal, Select, Text, TextInput } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 
-import { FileDropzone } from '@/components/FileDropzone';
 import { DefaultButton } from '@/components/buttons/DefaultButton';
 
 import { platforms } from '@/features/admins/configs';
 import { TRowData } from '@/features/admins/items/types';
-import { TSubTheme } from '@/features/admins/subThemes/types';
+import { TCollection, TTheme } from '@/types';
 
 type Props = {
   form: UseFormReturnType<TRowData, (values: TRowData) => TRowData>;
   isOpen: boolean;
   onClose: () => void;
   onEdit: (values: TRowData) => Promise<void>;
-  subThemes: TSubTheme[];
+  subThemes: TCollection[];
+  themes: TTheme[];
 };
-export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes }: Props) => {
+export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes, themes }: Props) => {
   // サブテーマを変更したらテーマも変更する
   form.watch('sub_theme', ({ value }) => {
-    const theme = subThemes.find((item) => item.title === value)?.theme.name;
+    const theme = themes.find((item) => item.id === Number(value))?.name;
     if (theme) {
       form.setFieldValue('theme', theme);
     }
@@ -56,7 +56,7 @@ export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes }: Props) =
             <Text c='black' fw={500} fz='sm'>
               サムネイル
             </Text>
-            <FileDropzone imageUrl={form.getInputProps('image_url').value} />
+            {/* <FileDropzone imageUrl={form.getInputProps('image_url').value} /> */}
           </div>
         </Flex>
         <Group justify='flex-end' mt='md'>

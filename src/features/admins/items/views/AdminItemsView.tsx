@@ -1,43 +1,38 @@
 'use client';
 import { Group, Title } from '@mantine/core';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
+import { DefaultButton } from '@/components/buttons/DefaultButton';
+
+import { InsertModal } from '@/features/admins/items/components/InsertModal';
 import { ItemsTable } from '@/features/admins/items/components/ItemsTable';
-import { useGetItems } from '@/features/admins/items/hooks/useGetItems';
+import { useFetcher } from '@/features/admins/items/hooks/useFetcher';
 
 export const AdminItemsView = () => {
-  // const supabase = createClient();
-  // const [insertModalOpen, setInsertModalOpen] = useState(false);
-  // const [insertValue, setInsertValue] = useState('');
-  const { handleGetItems, isLoading, items } = useGetItems();
-
-  // const handleInsertTheme = async (themeId: number, description: string) => {
-  //   const { error } = await supabase.from('collections').insert({ title: insertValue, theme_id: themeId, description });
-  //   if (error) throw error;
-  //   setInsertModalOpen(false);
-  //   setInsertValue('');
-  //   handleGetItems();
-  // };
-
-  useEffect(() => {
-    handleGetItems();
-  }, [handleGetItems]);
+  const [insertModalOpen, setInsertModalOpen] = useState(false);
+  const { categories, isLoading, items, subThemes, themes } = useFetcher();
 
   return (
     <div>
       <Group justify='space-between' mb='md'>
         <Title order={2}>作品管理</Title>
-        {/* <DefaultButton
+        <DefaultButton
           color='primary'
           onClick={() => {
             setInsertModalOpen(true);
-            setInsertValue('');
           }}
         >
           作品を追加
-        </DefaultButton> */}
+        </DefaultButton>
       </Group>
-      <ItemsTable isLoading={isLoading} items={items} />
+      <ItemsTable isLoading={isLoading} items={items} subThemes={subThemes} themes={themes} />
+      <InsertModal
+        categories={categories}
+        isOpen={insertModalOpen}
+        subThemes={subThemes}
+        themes={themes}
+        onClose={() => setInsertModalOpen(false)}
+      />
     </div>
   );
 };

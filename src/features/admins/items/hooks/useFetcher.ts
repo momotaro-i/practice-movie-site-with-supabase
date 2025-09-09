@@ -25,7 +25,7 @@ export const useFetcher = () => {
       )
     `
       )
-      .order('id', { ascending: true });
+      .order('id', { ascending: false });
 
     setItems(result.data ?? ([] as unknown as TAdminItem[]));
     return result;

@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FaSearch, FaTrashAlt } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';
 
+import { getPublicThumbUrl } from '@/utils/fetch/thumb';
 import { createClient } from '@/utils/supabase/client';
 
 import { EditModal } from '@/features/admins/items/components/EditModal';
@@ -103,11 +104,16 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
                 hidden: !selectedColumns.includes('id'),
               },
               {
-                accessor: 'image_url',
+                accessor: 'thumbnail_url',
                 title: 'サムネイル',
                 width: 150,
-                render: ({ image_url, title }) => <Image alt={title} height='auto' src={image_url} width='150px' />,
-                hidden: !selectedColumns.includes('image_url'),
+                render: ({ thumbnail_url, title }, index) => {
+                  const url = items[index].thumbnail_path
+                    ? getPublicThumbUrl(items[index].thumbnail_path) // 新規（Storage）
+                    : thumbnail_url ?? ''; // 既存（外部URL）
+                  return <Image alt={title} height='auto' src={url} width='150px' />;
+                },
+                hidden: !selectedColumns.includes('thumbnail_url'),
               },
               {
                 title: 'タイトル',
@@ -251,6 +257,7 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
                 accessor: 'actions',
                 title: <Box>操作</Box>,
                 width: '0%',
+                titleStyle: () => ({ backgroundColor: 'white' }),
                 cellsStyle: () => ({ backgroundColor: 'white' }),
                 render: (record) => (
                   <Group gap={4} wrap='nowrap'>

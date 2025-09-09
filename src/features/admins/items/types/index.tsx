@@ -21,7 +21,7 @@ export type TRowData = {
   copyright: string;
   description: string;
   id: number;
-  image_url: string;
+  thumbnail_url: string;
   platform: string;
   platform_url: string;
   sub_theme: string;

@@ -56,7 +56,7 @@ export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes, themes }: 
             <Text c='black' fw={500} fz='sm'>
               サムネイル
             </Text>
-            {/* <FileDropzone imageUrl={form.getInputProps('image_url').value} /> */}
+            {/* <FileDropzone imageUrl={form.getInputProps('thumbnail_url').value} /> */}
           </div>
         </Flex>
         <Group justify='flex-end' mt='md'>

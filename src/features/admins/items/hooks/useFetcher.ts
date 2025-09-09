@@ -12,8 +12,8 @@ export const useFetcher = () => {
   const [items, setItems] = useState<TAdminItem[]>([]);
   const [categories, setCategories] = useState<TCategory[]>([]);
 
-  const getItems = useCallback(() => {
-    return supabase
+  const getItems = useCallback(async () => {
+    const result = await supabase
       .from('items')
       .select(
         `
@@ -26,17 +26,27 @@ export const useFetcher = () => {
     `
       )
       .order('id', { ascending: true });
+
+    setItems(result.data ?? ([] as unknown as TAdminItem[]));
+    return result;
   }, [supabase]);
 
-  const getThemes = useCallback(() => {
-    return supabase.from('themes').select('*');
+  const getThemes = useCallback(async () => {
+    const result = await supabase.from('themes').select('*');
+    setThemes(result.data ?? ([] as unknown as TTheme[]));
+    return result;
   }, [supabase]);
 
-  const getSubThemes = useCallback(() => {
-    return supabase.from('collections').select('*');
+  const getSubThemes = useCallback(async () => {
+    const result = await supabase.from('collections').select('*');
+    setSubThemes(result.data ?? ([] as unknown as TCollection[]));
+    return result;
   }, [supabase]);
-  const getCategories = useCallback(() => {
-    return supabase.from('categories').select('*');
+
+  const getCategories = useCallback(async () => {
+    const result = await supabase.from('categories').select('*');
+    setCategories(result.data ?? ([] as unknown as TCategory[]));
+    return result;
   }, [supabase]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -45,19 +55,10 @@ export const useFetcher = () => {
     setIsLoading(true);
     // テーマ/サブテーマをまとめて取得
     (async () => {
-      const [items, themesRes, subThemesRes, categoriesRes] = await Promise.all([
-        getItems(),
-        getThemes(),
-        getSubThemes(),
-        getCategories(),
-      ]);
-      setItems(items.data ?? ([] as unknown as TAdminItem[]));
-      setThemes(themesRes.data ?? ([] as unknown as TTheme[]));
-      setSubThemes(subThemesRes.data ?? ([] as unknown as TCollection[]));
-      setCategories(categoriesRes.data ?? ([] as unknown as TCategory[]));
+      await Promise.all([getThemes(), getSubThemes(), getCategories(), getItems()]);
     })();
     setIsLoading(false);
   }, [getItems, getThemes, getSubThemes, getCategories]);
 
-  return { items, isLoading, themes, subThemes, categories };
+  return { items, isLoading, themes, subThemes, categories, getItems };
 };

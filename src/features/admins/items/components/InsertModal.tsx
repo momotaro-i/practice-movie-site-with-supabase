@@ -15,13 +15,15 @@ import { TCategory, TCollection, TTheme } from '@/types';
 
 type Props = {
   categories: TCategory[];
+  handleGetItems: () => Promise<any>;
   isOpen: boolean;
   onClose: () => void;
   subThemes: TCollection[];
   themes: TTheme[];
 };
-export const InsertModal = ({ categories, isOpen, onClose, subThemes, themes }: Props) => {
+export const InsertModal = ({ categories, handleGetItems, isOpen, onClose, subThemes, themes }: Props) => {
   const supabase = createClient();
+
   const form = useForm({
     initialValues: {
       title: '',
@@ -29,7 +31,7 @@ export const InsertModal = ({ categories, isOpen, onClose, subThemes, themes }: 
       copyright: '',
       themeId: '',
       subThemeId: '',
-      image_url: '', //fixme
+      thumbnail_url: '',
       categoryId: '',
       platform: '',
       platform_url: '',
@@ -44,21 +46,21 @@ export const InsertModal = ({ categories, isOpen, onClose, subThemes, themes }: 
       platform_url: (value) => (value ? null : 'プラットフォームURLは必須です'),
       file: (value) => (value ? null : 'サムネイルは必須です'),
       description: (value) => (value ? null : '説明テキストは必須です'),
-      copyright: (value) => (value ? null : 'コピーライトは必須です'),
     },
     transformValues: (values) => {
       // 使わない変数を無視する
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { categoryId, file, subThemeId, themeId, ...rest } = values;
+      const { categoryId, file, subThemeId, themeId, thumbnail_url, ...rest } = values;
 
       return {
         ...rest,
+        thumbnail_url: thumbnail_url || null,
         collection_id: Number(values.subThemeId),
       };
     },
   });
 
-  const { handleSelectedFile, handleUpload } = useThumbnailUpload({ onClose, supabase, form });
+  const { handleSelectedFile, handleUpload } = useThumbnailUpload({ supabase, form });
 
   // テーマが選択されたらそのテーマに所属するサブテーマを取得
   const availableSubThemes = useMemo(() => {
@@ -67,20 +69,28 @@ export const InsertModal = ({ categories, isOpen, onClose, subThemes, themes }: 
     return subThemes.filter((subTheme) => subTheme.theme_id === Number(selectedThemeId));
   }, [form, subThemes]);
 
+  // モーダルを閉じる（フォームをリセット）
+  const handleModalClose = () => {
+    onClose();
+    form.reset();
+  };
+
   // 作品を追加
   const handleInsert = async () => {
-    // 1. 作品を追加
+    // 1. サムネイルを追加
+    const thumbnailPath = await handleUpload();
+
+    // 2. 作品を追加
     const values = form.getTransformedValues();
-    console.log(values);
 
     const { data: newItem, error: insertError } = await supabase
       .from('items')
-      .insert(values)
+      .insert({ ...values, thumbnail_path: thumbnailPath })
       .select('id, collection_id');
 
     if (insertError) throw insertError;
 
-    // 2. 中間テーブルにカテゴリとの関係を追加
+    // 3. 中間テーブルにカテゴリとの関係を追加
     const categoryIds = form.getValues().categoryId; // 選択されたカテゴリID
 
     const rows = { item_id: newItem[0].id, category_id: categoryIds };
@@ -89,17 +99,12 @@ export const InsertModal = ({ categories, isOpen, onClose, subThemes, themes }: 
 
     if (linkError) throw linkError;
 
-    // 3. サムネイルを追加
-
-    handleUpload({
-      itemId: newItem[0].id,
-      themeId: Number(form.getValues().themeId),
-      subThemeId: newItem[0].collection_id,
-    });
+    handleModalClose();
+    handleGetItems();
   };
 
   return (
-    <Modal opened={isOpen} size='lg' title='作品追加' onClose={onClose}>
+    <Modal opened={isOpen} size='lg' title='作品追加' onClose={handleModalClose}>
       {themes.length > 0 && subThemes.length > 0 && (
         <>
           <Flex direction='column' gap={20}>
@@ -141,11 +146,11 @@ export const InsertModal = ({ categories, isOpen, onClose, subThemes, themes }: 
             </div>
           </Flex>
           <Group justify='flex-end' mt='md'>
-            <DefaultButton color='primary' variant='subtle' onClick={onClose}>
+            <DefaultButton color='primary' variant='subtle' onClick={handleModalClose}>
               キャンセル
             </DefaultButton>
             <DefaultButton color='primary' onClick={handleInsert}>
-              作品をを追加
+              作品を追加
             </DefaultButton>
           </Group>
         </>

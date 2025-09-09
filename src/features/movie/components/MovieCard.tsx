@@ -20,7 +20,7 @@ export const MovieCard = ({ isFavorite, item, onToggleFavorite }: MovieCardProps
     <Box>
       <SImageWrapper>
         {!loaded && <Skeleton h='100%' radius='sm' w='100%' />}
-        <Image fill alt={item.title} src={item.image_url} onLoad={() => setLoaded(true)} />
+        <Image fill alt={item.title} src={item.thumbnail_url} onLoad={() => setLoaded(true)} />
         <SFavoriteButton onClick={() => onToggleFavorite(item.id)}>
           <SStarIcon>
             {isFavorite ? <FaStar color='white' size={20} /> : <FaRegStar color='white' size={20} />}

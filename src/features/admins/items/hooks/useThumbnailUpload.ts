@@ -1,46 +1,40 @@
 import { UseFormReturnType } from '@mantine/form';
+import { useId } from '@mantine/hooks';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useState } from 'react';
+
 type Props = {
   form: UseFormReturnType<any, (values: any) => any>;
-  onClose: () => void;
   supabase: SupabaseClient; // fixme
 };
-export const useThumbnailUpload = ({ form, onClose, supabase }: Props) => {
+export const useThumbnailUpload = ({ form, supabase }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const uuid = useId();
 
-  const handleUpload = async ({
-    itemId,
-    subThemeId,
-    themeId,
-  }: {
-    itemId: number;
-    subThemeId: number;
-    themeId: number;
-  }) => {
+  const handleUpload = async () => {
     if (!selectedFile) return;
 
     try {
       // 拡張子を取得
       const extension = selectedFile.name.split('.').pop();
       // ファイル名を作成
-      const fileName = `thumbnail${themeId}-${subThemeId}-${itemId}.${extension}`;
+      const fileName = `thumbnail-${uuid}.${extension}`;
       const path = `thumbnails/${fileName}`;
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('thumbnails') // バケット名
         .upload(path, selectedFile, {
           contentType: selectedFile.type,
-          upsert: false,
+          upsert: true, // 既存ファイルを上書き
         });
 
       if (error) throw error;
-      console.log('uploaded:', data);
 
-      // ✅ 成功後の処理（DB保存や画面更新など）
-      onClose();
+      // ✅ 成功後の処理 パスを返す
+      return path;
     } catch (e) {
       console.error(e);
       alert('アップロード失敗');
+      return null;
     }
   };
 

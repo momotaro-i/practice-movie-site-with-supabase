@@ -24,7 +24,7 @@ export const useMovieData = () => {
               items (*)
             )
           `),
-          supabase.from('favorite_counts').select('*'),
+          supabase.rpc('get_favorite_counts'),
         ]);
 
         const { data: allItems, error: allItemsError } = itemsData as { data: TResponse[]; error: Error | null };
@@ -44,10 +44,10 @@ export const useMovieData = () => {
               ...collection,
               items: collection.items.map((item) => {
                 // いいね数を検索
-                const favoriteCount = favoritesItems?.find((f) => f.title_id === item.id);
+                const favoriteCount = favoritesItems?.find((f) => f.item_id === item.id);
                 return {
                   ...item,
-                  favorite_count: favoriteCount?.like_count || 0,
+                  favorite_count: favoriteCount?.favorites_count || 0,
                 };
               }),
             })),

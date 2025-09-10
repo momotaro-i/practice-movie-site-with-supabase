@@ -226,5 +226,3 @@ Zustand でも同様の問題はありますが、`persist` 機能と `useEffect
 
 通常の例：  
 `src\features\counter\store\index.ts`, `src\features\counter\components\Counter.tsx`
-
-npx supabase gen types typescript --project-id itplbmvydiozxxrujhug > src/types/supabase.ts

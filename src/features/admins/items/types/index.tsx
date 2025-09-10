@@ -25,6 +25,7 @@ export type TRowData = {
   platform_url: string;
   sub_theme: string;
   theme: string;
-  thumbnail_url: string;
+  thumbnail_url: string | null;
+  thumbnail_path: string | null;
   title: string;
 };

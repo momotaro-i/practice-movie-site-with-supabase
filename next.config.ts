@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  distDir: 'dist',
+  // distDir: 'dist', // Vercelでは標準の.nextディレクトリを使用
   compiler: {
     styledComponents: true,
   },

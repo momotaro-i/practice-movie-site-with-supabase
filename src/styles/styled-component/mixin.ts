@@ -1,5 +1,6 @@
-import { FontKey, fonts, FontWeights } from '@/configs/fonts';
 import { css } from 'styled-components';
+
+import { FontKey, fonts, FontWeights } from '@/configs/fonts';
 
 export const mixins = {
   /* 指定した行数でテキストを省略表示（...）します。 */

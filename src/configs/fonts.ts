@@ -26,6 +26,6 @@ export const fonts = {
 export type FontKey = keyof typeof fonts;
 
 export type FontWeights = {
-  roboto: 400 | 500 | 700;
   notoSansJP: 400 | 500 | 700;
+  roboto: 400 | 500 | 700;
 };

@@ -21,10 +21,10 @@ export type TRowData = {
   copyright: string;
   description: string;
   id: number;
-  thumbnail_url: string;
   platform: string;
   platform_url: string;
   sub_theme: string;
   theme: string;
+  thumbnail_url: string;
   title: string;
 };

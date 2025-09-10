@@ -46,7 +46,6 @@ export const AdminThemesView = () => {
       <InsertModal
         insertValue={insertValue}
         isOpen={insertModalOpen}
-        label='テーマ'
         onChange={setInsertValue}
         onClose={() => setInsertModalOpen(false)}
         onInsert={handleInsertTheme}

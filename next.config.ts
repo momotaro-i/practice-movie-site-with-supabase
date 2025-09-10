@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['dummyimage.com'],
+    domains: ['dummyimage.com', 'itplbmvydiozxxrujhug.supabase.co'],
   },
   webpack: (config, { dev }) => {
     if (dev) {

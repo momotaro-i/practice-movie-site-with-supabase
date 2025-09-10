@@ -220,7 +220,7 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
               {
                 title: 'コピーライト',
                 accessor: 'copyright',
-                render: ({ copyright }) => `${copyright}`,
+                render: ({ copyright }) => `${copyright || ''}`,
                 hidden: !selectedColumns.includes('copyright'),
               },
               {

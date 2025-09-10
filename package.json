@@ -4,10 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:test": "env-cmd -f .env.test next build",
-    "build:stg": "env-cmd -f .env.staging next build",
-    "build:prod": "env-cmd -f .env.prod next build",
-    "deploy": "bash deploy.sh",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },

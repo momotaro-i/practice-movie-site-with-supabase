@@ -101,9 +101,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default AdminLayout;
-
-export const SNavbar = styled.nav`
+// styled-componentsをexportしないように修正
+const SNavbar = styled.nav`
   height: 100vh;
   width: 200px;
   flex-shrink: 0;
@@ -113,23 +112,23 @@ export const SNavbar = styled.nav`
   border-right: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 `;
 
-export const SNavbarMain = styled.div`
+const SNavbarMain = styled.div`
   flex: 1;
 `;
 
-export const SHeader = styled.div`
+const SHeader = styled.div`
   padding-bottom: var(--mantine-spacing-md);
   margin-bottom: calc(var(--mantine-spacing-md) * 1.5);
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 `;
 
-export const SFooter = styled.div`
+const SFooter = styled.div`
   padding-top: var(--mantine-spacing-md);
   margin-top: var(--mantine-spacing-md);
   border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 `;
 
-export const SNavLink = styled(Link)`
+const SNavLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -181,3 +180,5 @@ const SChildrenWrapper = styled.div`
     color: var(--black) !important;
   }
 `;
+
+export default AdminLayout;

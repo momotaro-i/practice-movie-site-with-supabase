@@ -24,14 +24,12 @@ function checkBasicAuth(request: NextRequest): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  // 特定のパス（例：/admin）のみにBasic認証を適用
-  const isAdminPath = request.nextUrl.pathname.startsWith('/admin');
-
-  if (isAdminPath && !checkBasicAuth(request)) {
+  // 全サイトにBasic認証を適用
+  if (!checkBasicAuth(request)) {
     return new NextResponse('Authentication required', {
       status: 401,
       headers: {
-        'WWW-Authenticate': 'Basic realm="Admin Area"',
+        'WWW-Authenticate': 'Basic realm="Secure Area"',
       },
     });
   }

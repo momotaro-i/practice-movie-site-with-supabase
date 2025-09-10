@@ -24,12 +24,12 @@ export const useFavorites = ({ data }: Props) => {
     if (user) {
       // ログイン中のユーザーのお気に入り状況を取得
       const fetchFavorites = async () => {
-        // user_idが一致するtitle_idを取得
-        const { data: favorites } = await supabase.from('favorites').select('title_id').eq('user_id', user.id);
+        // user_idが一致するitem_idを取得
+        const { data: favorites } = await supabase.from('favorites').select('item_id').eq('user_id', user.id);
 
         if (favorites) {
-          // お気に入りのtitle_idを配列に変換
-          const ids = favorites.map((favorite) => favorite.title_id);
+          // お気に入りのitem_idを配列に変換
+          const ids = favorites.map((favorite) => favorite.item_id);
           setFavoriteIds(new Set(ids));
         }
       };
@@ -51,8 +51,8 @@ export const useFavorites = ({ data }: Props) => {
       const isFavorite = favoriteIds.has(id);
 
       if (isFavorite) {
-        // user_idとtitle_idが一致するレコードを削除
-        await supabase.from('favorites').delete().eq('user_id', user.id).eq('title_id', id);
+        // user_idとitem_idが一致するレコードを削除
+        await supabase.from('favorites').delete().eq('user_id', user.id).eq('item_id', id);
         // その作品のfavorite_countを1減らす
         setUpdateMoviesData((prev) =>
           prev.map((theme) => ({
@@ -69,7 +69,7 @@ export const useFavorites = ({ data }: Props) => {
         // お気に入りに追加
         await supabase.from('favorites').insert({
           user_id: user.id,
-          title_id: id,
+          item_id: id,
         });
         // その作品のfavorite_countを1増やす
         setUpdateMoviesData((prev) =>

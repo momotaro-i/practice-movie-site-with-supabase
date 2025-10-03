@@ -1,15 +1,21 @@
 import { ActionIcon, Box, Group, Image, Text } from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdInsertPhoto, MdOutlineUploadFile } from 'react-icons/md';
 
 import { IconClose } from '@/components/icons/IconClose';
 
 type Props = {
+  defaultImageUrl?: string | null;
   onFileSelected: (file: File | null) => void;
 };
-export const FileDropzone = ({ onFileSelected, ...props }: Props) => {
+export const FileDropzone = ({ defaultImageUrl, onFileSelected, ...props }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [existingUrl, setExistingUrl] = useState<string | null>(defaultImageUrl ?? null);
+
+  useEffect(() => {
+    setExistingUrl(defaultImageUrl ?? null);
+  }, [defaultImageUrl]);
 
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file);
@@ -28,6 +34,7 @@ export const FileDropzone = ({ onFileSelected, ...props }: Props) => {
   const handleDrop = (dropped: File[]) => {
     const f = dropped[0] || null;
     setFiles(dropped);
+    setExistingUrl(null); // 新しいファイルを選択したら既存のURLをクリア
     onFileSelected?.(f);
   };
 
@@ -36,6 +43,18 @@ export const FileDropzone = ({ onFileSelected, ...props }: Props) => {
     onFileSelected?.(null);
   };
 
+  const handleClear = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    if (files.length > 0) {
+      // 新規ファイルをクリア
+      setFiles([]);
+      onFileSelected?.(null);
+    } else if (existingUrl) {
+      // 既存サムネをクリア
+      setExistingUrl(null);
+      onFileSelected?.(null);
+    }
+  };
   return (
     <>
       <Dropzone
@@ -49,18 +68,16 @@ export const FileDropzone = ({ onFileSelected, ...props }: Props) => {
           {files.length > 0 ? (
             // ユーザーがアップロードしたファイルのプレビュー
             <div>
-              <CloseButton handleReject={handleReject} />
+              <CloseButton onClick={handleClear} />
               <Box h={220}>{previews}</Box>
             </div>
+          ) : existingUrl ? (
+            // 既存サムネの表示
+            <Box pos='relative'>
+              <CloseButton onClick={handleClear} />
+              <Image alt='既存画像' h={220} src={existingUrl} w='auto' />
+            </Box>
           ) : (
-            // defaultImageUrl ? (
-            //   // デフォルトの imageUrl がある場合はこちらを表示
-            //   <Box>
-            //     <CloseButton handleReject={handleReject} />
-            //     <Image alt='既存画像' h='220px' src={imageUrl} w='auto' />
-            //   </Box>
-            //  ) :
-
             <Group gap='xl' justify='center' style={{ pointerEvents: 'none' }}>
               <Dropzone.Accept>
                 <MdOutlineUploadFile color='var(--mantine-color-blue-6)' size={52} />
@@ -87,7 +104,7 @@ export const FileDropzone = ({ onFileSelected, ...props }: Props) => {
   );
 };
 
-const CloseButton = ({ handleReject }: { handleReject: (e: React.MouseEvent<HTMLElement>) => void }) => {
+const CloseButton = ({ onClick }: { onClick: (e: React.MouseEvent<HTMLElement>) => void }) => {
   return (
     <ActionIcon
       aria-label='画像を削除'
@@ -103,7 +120,7 @@ const CloseButton = ({ handleReject }: { handleReject: (e: React.MouseEvent<HTML
           top: 0,
         },
       }}
-      onClick={(e) => handleReject(e)}
+      onClick={(e) => onClick(e)}
     >
       <IconClose color='var(--mantine-color-dimmed)' size={16} />
     </ActionIcon>

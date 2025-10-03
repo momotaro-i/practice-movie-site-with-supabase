@@ -1,7 +1,7 @@
 // 配列
 export const tableColumns = [
   // { label: 'ID', value: 'id' },
-  { label: 'サムネイル', value: 'thumbnail_url' },
+  { label: 'サムネイル', value: 'thumbnail_path' },
   { label: 'タイトル', value: 'title' },
   { label: 'テーマ', value: 'theme' },
   { label: 'サブテーマ', value: 'sub_theme' },

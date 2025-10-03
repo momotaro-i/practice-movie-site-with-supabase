@@ -18,10 +18,7 @@ interface MovieCardProps {
 
 export const MovieCard = ({ isFavorite, item, onToggleFavorite }: MovieCardProps) => {
   const [loaded, setLoaded] = useState(false);
-  const url = item.thumbnail_path
-    ? getPublicThumbUrl(item.thumbnail_path) // 新規（Storage）
-    : item.thumbnail_url ?? ''; // 既存（外部URL）
-
+  const url = getPublicThumbUrl(item.thumbnail_path);
   return (
     <Box>
       <SImageWrapper>

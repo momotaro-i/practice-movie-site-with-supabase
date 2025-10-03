@@ -21,7 +21,7 @@ export const ItemsTableBody = ({ handleDeleteTheme, handleEditTheme, items, sele
           {selectedColumns.includes('id') && <Table.Td w={40}>{item.id}</Table.Td>}
           {selectedColumns.includes('image') && (
             <Table.Td w={200}>
-              <Image alt={item.title} height='auto' src={item.thumbnail_url} width='100%' />
+              <Image alt={item.title} height='auto' src={item.thumbnail_path} width='100%' />
             </Table.Td>
           )}
           {selectedColumns.includes('theme') && (

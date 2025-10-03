@@ -1,13 +1,13 @@
 'use client';
 
-import { ActionIcon, Box, Center, Group, Image, Loader, MultiSelect } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Loader, MultiSelect } from '@mantine/core';
 import { DataTable } from 'mantine-datatable';
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { FaSearch, FaTrashAlt } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';
 
 import { getPublicThumbUrl } from '@/utils/fetch/thumb';
-import { createClient } from '@/utils/supabase/client';
 
 import { EditModal } from '@/features/admins/items/components/EditModal';
 import { TableColumnFilter } from '@/features/admins/items/components/TableColumnFilter';
@@ -23,6 +23,7 @@ type Props = {
   themes: TTheme[];
 };
 export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
+  // items からテーブル描画用の初期配列を生成
   const initialRecords = useMemo(
     () =>
       items.map((item) => {
@@ -37,7 +38,11 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
     [items]
   );
 
+  // テーブルに実際に表示するレコード（フィルタに応じて変動）
   const [records, setRecords] = useState<TRowData[]>([]);
+
+  // ---- 以下、各種フィルタ用の状態 ----
+  // テーマ/サブテーマ/タイトル/カテゴリ/プラットフォームの選択値と、候補一覧を保持
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedSubThemes, setSelectedSubThemes] = useState<string[]>([]);
   const [allTitles, setAllTitles] = useState<string[]>([]);
@@ -47,9 +52,10 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
 
   const [allPlatforms, setAllPlatforms] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-  const supabase = createClient();
 
+  // items から初期レコードとフィルタ候補を準備する
   useEffect(() => {
+    // 初期レコードを設定
     setRecords(initialRecords);
 
     // 各フィールドの一意な値を取得
@@ -57,11 +63,13 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
     const uniqueCategories = [...new Set(initialRecords.map((record) => record.category))];
     const uniquePlatforms = [...new Set(initialRecords.map((record) => record.platform))];
 
+    // マルチセレクトの候補に反映
     setAllTitles(uniqueTitles);
     setAllCategories(uniqueCategories);
     setAllPlatforms(uniquePlatforms);
-  }, [initialRecords, supabase]);
+  }, [initialRecords]);
 
+  // 選択中のフィルタ条件が変わったら、records を絞り込む
   useEffect(() => {
     setRecords(
       initialRecords.filter(({ category, platform, sub_theme, theme, title }) => {
@@ -76,9 +84,11 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
     );
   }, [selectedThemes, selectedSubThemes, selectedTitles, selectedCategories, selectedPlatforms, initialRecords]);
 
-  // 表示するデータを絞り込む
+  // 列に表示するデータを絞り込む
+  // 列の表示/非表示を管理するカスタムフック
   const { handleColumnChange, selectedColumns } = useTableColumnFilter();
-  // 作品の編集
+
+  // 作品の編集モーダルの表示/非表示を管理するカスタムフック
   const { form: editForm, handleEdit, handleModalToggle, isOpen } = useEditModal();
 
   return (
@@ -104,16 +114,18 @@ export const ItemsTable = ({ isLoading, items, subThemes, themes }: Props) => {
                 hidden: !selectedColumns.includes('id'),
               },
               {
-                accessor: 'thumbnail_url',
+                accessor: 'thumbnail_path',
                 title: 'サムネイル',
                 width: 150,
-                render: ({ thumbnail_url, title }, index) => {
-                  const url = items[index].thumbnail_path
-                    ? getPublicThumbUrl(items[index].thumbnail_path) // 新規（Storage）
-                    : thumbnail_url ?? ''; // 既存（外部URL）
-                  return <Image alt={title} height='auto' src={url} width='150px' />;
+                render: ({ thumbnail_path, title }) => {
+                  const url = getPublicThumbUrl(thumbnail_path);
+                  return (
+                    <Box style={{ aspectRatio: '300 / 200', position: 'relative' }} w={120}>
+                      <Image fill alt={title} src={url} style={{ objectFit: 'contain' }} />
+                    </Box>
+                  );
                 },
-                hidden: !selectedColumns.includes('thumbnail_url'),
+                hidden: !selectedColumns.includes('thumbnail_path'),
               },
               {
                 title: 'タイトル',

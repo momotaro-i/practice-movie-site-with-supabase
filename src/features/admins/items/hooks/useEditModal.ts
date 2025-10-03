@@ -14,6 +14,7 @@ export const useEditModal = () => {
   // 編集モーダルを開く
   const handleModalToggle = (opened: boolean, record?: TRowData) => {
     setIsOpen(opened);
+
     if (opened && record) {
       form.setValues(record);
     }

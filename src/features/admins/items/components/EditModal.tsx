@@ -1,9 +1,10 @@
 'use client';
 
-import { Flex, Group, Modal, Select, Text, TextInput } from '@mantine/core';
+import { Flex, Group, Modal, Select, Text, Textarea, TextInput } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 
 import { DefaultButton } from '@/components/buttons/DefaultButton';
+import { FileDropzone } from '@/components/forms/FileDropzone';
 
 import { platforms } from '@/features/admins/configs';
 import { TRowData } from '@/features/admins/items/types';
@@ -26,21 +27,23 @@ export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes, themes }: 
     }
   });
 
+  const handleSelectedFile = (file: File | null) => {
+    form.setFieldValue('file', file);
+  };
+
   return (
-    <Modal opened={isOpen} size='xl' title='サブテーマ編集' onClose={onClose}>
+    <Modal opened={isOpen} size='xl' title='作品編集' onClose={onClose}>
       <form onSubmit={form.onSubmit(onEdit)}>
         <Flex direction='column' gap={20}>
-          <TextInput autoFocus label='タイトル' {...form.getInputProps('title')} />
-
           <TextInput autoFocus label='テーマ' {...form.getInputProps('theme')} disabled />
-
           <Select
             data={subThemes.map((subTheme) => subTheme.title) ?? []}
             label='サブテーマ'
             {...form.getInputProps('sub_theme')}
           />
-
-          <TextInput autoFocus label='カテゴリ' {...form.getInputProps('category')} />
+          <TextInput autoFocus label='タイトル' {...form.getInputProps('title')} />
+          <Textarea autoFocus label='説明テキスト' {...form.getInputProps('description')} />
+          <TextInput autoFocus label='コピーライト' {...form.getInputProps('copyright')} />
           <Select
             data={platforms.map((platform) => platform.name)}
             label='プラットフォーム'
@@ -56,7 +59,7 @@ export const EditModal = ({ form, isOpen, onClose, onEdit, subThemes, themes }: 
             <Text c='black' fw={500} fz='sm'>
               サムネイル
             </Text>
-            {/* <FileDropzone imageUrl={form.getInputProps('thumbnail_url').value} /> */}
+            <FileDropzone onFileSelected={handleSelectedFile} />
           </div>
         </Flex>
         <Group justify='flex-end' mt='md'>

@@ -6,8 +6,8 @@ import { useMemo } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
 
-import { FileDropzone } from '@/components/FileDropzone';
 import { DefaultButton } from '@/components/buttons/DefaultButton';
+import { FileDropzone } from '@/components/forms/FileDropzone';
 
 import { platforms } from '@/features/admins/configs';
 import { useThumbnailUpload } from '@/features/admins/items/hooks/useThumbnailUpload';
@@ -31,7 +31,7 @@ export const InsertModal = ({ categories, handleGetItems, isOpen, onClose, subTh
       copyright: '',
       themeId: '',
       subThemeId: '',
-      thumbnail_url: '',
+      thumbnail_path: '',
       categoryId: '',
       platform: '',
       platform_url: '',
@@ -50,11 +50,11 @@ export const InsertModal = ({ categories, handleGetItems, isOpen, onClose, subTh
     transformValues: (values) => {
       // 使わない変数を無視する
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { categoryId, file, subThemeId, themeId, thumbnail_url, ...rest } = values;
+      const { categoryId, file, subThemeId, themeId, thumbnail_path, ...rest } = values;
 
       return {
         ...rest,
-        thumbnail_url: thumbnail_url || null,
+        thumbnail_path: thumbnail_path || null,
         collection_id: Number(values.subThemeId),
       };
     },
@@ -104,7 +104,7 @@ export const InsertModal = ({ categories, handleGetItems, isOpen, onClose, subTh
   };
 
   return (
-    <Modal opened={isOpen} size='lg' title='作品追加' onClose={handleModalClose}>
+    <Modal opened={isOpen} size='xl' title='作品追加' onClose={handleModalClose}>
       {themes.length > 0 && subThemes.length > 0 && (
         <>
           <Flex direction='column' gap={20}>
